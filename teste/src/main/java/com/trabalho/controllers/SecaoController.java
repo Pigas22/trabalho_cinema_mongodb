@@ -1,197 +1,277 @@
 package com.trabalho.controllers;
 
-import com.mongodb.client.*;
-import org.bson.Document;
-import com.trabalho.utils.MenuFormatter;
+import com.trabalho.conexion.*;
+import com.trabalho.utils.*;
 import com.trabalho.models.*;
 
+import java.sql.Connection;
+import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import java.util.LinkedList;
 
 public class SecaoController {
+    public static boolean inserirRegistro (Secao secao) {
+        String sql = "INSERT INTO secao (id_secao, horario, id_cinema, id_filme, qtd_assentos) VALUES (?, ?, ?, ?, ?);";
 
-    private static MongoDatabase database = Database.getDatabase();
+        try (Connection conn = Database.conectar();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-    public static boolean inserirRegistro(Secao secao) {
-        MongoCollection<Document> collection = database.getCollection("secao");
+            int idSecao = SecaoController.getMaiorId();
+            if (idSecao == -500) {
+                idSecao = 0;
 
-        int idSecao = getMaiorId();
-        if (idSecao == -500) {
-            idSecao = 0;
-        } else if (idSecao == -999) {
-            return false;
-        }
+            } else if (idSecao == -999) {
+                return false;
+            }
+            
+            pstmt.setInt(1, idSecao+1);
+            pstmt.setTimestamp(2, secao.getHorario());
+            pstmt.setInt(3, secao.getCinema().getIdCinema());
+            pstmt.setInt(4, secao.getFilme().getIdFilme());
+            pstmt.setInt(5, secao.getQtdAssentos());
 
-        Document document = new Document("id_secao", idSecao + 1)
-                .append("horario", secao.getHorario())
-                .append("id_cinema", secao.getCinema().getIdCinema())
-                .append("id_filme", secao.getFilme().getIdFilme())
-                .append("qtd_assentos", secao.getQtdAssentos());
+            pstmt.executeUpdate();
 
-        try {
-            collection.insertOne(document);
             return true;
-        } catch (Exception e) {
+            
+        } catch (SQLException e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
         }
     }
+    
+    public static boolean excluirRegistro (int idSecao) {
+        String sql = "DELETE FROM secao WHERE id_secao = ?;";
 
-    public static boolean excluirRegistro(int idSecao) {
-        MongoCollection<Document> collection = database.getCollection("secao");
+        if (SecaoController.existeRegistro(idSecao)) {
+            try (Connection conn = Database.conectar();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-        if (existeRegistro(idSecao)) {
-            try {
-                collection.deleteOne(new Document("id_secao", idSecao));
+                pstmt.setInt(1, idSecao);
+                pstmt.executeUpdate();
+
                 return true;
-            } catch (Exception e) {
+
+            } catch (SQLException e) {
                 MenuFormatter.msgTerminalERROR(e.getMessage());
                 return false;
             }
+            
         } else {
             MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
             return false;
         }
     }
 
-    public static boolean excluirTodosRegistros() {
-        MongoCollection<Document> collection = database.getCollection("secao");
+    public static boolean excluirTodosRegistros () {
+        try (Connection conn = Database.conectar();
+            Statement stmt = conn.createStatement()) {
 
-        try {
-            collection.deleteMany(new Document());
-            return true;
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
+                String sql = "DELETE FROM secao;";
+                stmt.executeUpdate(sql);
+
+                return true;
+                
+
+            } catch (SQLException e) {
+                MenuFormatter.msgTerminalERROR(e.getMessage());
+                return false;
+            }
     }
 
-    public static boolean atualizarRegistro(int idSecao, Timestamp horario, int idCinema, int idFilme, int qtdAssentos) {
-        MongoCollection<Document> collection = database.getCollection("secao");
+    public static boolean atualizarRegistro (int idSecao, Timestamp horario, int idCinema, int idFilme, int qtdAssentos) {
+        String sql = "UPDATE secao SET horario = ?, id_cinema = ?, id_filme = ?, qtd_assentos = ? WHERE id_secao = ?;";
 
         if (FilmeController.existeRegistro(idFilme)) {
-            try {
-                Document query = new Document("id_secao", idSecao);
-                Document update = new Document("$set", new Document("horario", horario)
-                        .append("id_cinema", idCinema)
-                        .append("id_filme", idFilme)
-                        .append("qtd_assentos", qtdAssentos));
-                collection.updateOne(query, update);
-                return true;
-            } catch (Exception e) {
+            try (Connection conn = Database.conectar();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+                pstmt.setTimestamp(1, horario);
+                pstmt.setInt(2, idCinema);
+                pstmt.setInt(3, idFilme);
+                pstmt.setInt(4, qtdAssentos);
+                pstmt.setInt(5, idSecao);
+
+            pstmt.executeUpdate();
+
+            return true;
+            
+            } catch (SQLException e) {
                 MenuFormatter.msgTerminalERROR(e.getMessage());
                 return false;
             }
+            
         } else {
             MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
             return false;
         }
     }
 
-    public static boolean atualizarRegistro(Secao secao) {
-        MongoCollection<Document> collection = database.getCollection("secao");
+    public static boolean atualizarRegistro (Secao secao) {
+        String sql = "UPDATE secao SET horario = ?, id_cinema = ?, id_filme = ?, qtd_assentos = ? WHERE id_secao = ?;";
 
         if (FilmeController.existeRegistro(secao.getIdSecao())) {
-            try {
-                Document query = new Document("id_secao", secao.getIdSecao());
-                Document update = new Document("$set", new Document("horario", secao.getHorario())
-                        .append("id_cinema", secao.getCinema().getIdCinema())
-                        .append("id_filme", secao.getFilme().getIdFilme())
-                        .append("qtd_assentos", secao.getQtdAssentos()));
-                collection.updateOne(query, update);
-                return true;
-            } catch (Exception e) {
+            try (Connection conn = Database.conectar();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+                pstmt.setTimestamp(1, secao.getHorario());
+                pstmt.setInt(2, secao.getCinema().getIdCinema());
+                pstmt.setInt(3, secao.getFilme().getIdFilme());
+                pstmt.setInt(4, secao.getQtdAssentos());
+                pstmt.setInt(5, secao.getIdSecao());
+
+            pstmt.executeUpdate();
+
+            return true;
+            
+            } catch (SQLException e) {
                 MenuFormatter.msgTerminalERROR(e.getMessage());
                 return false;
             }
+            
         } else {
             MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
             return false;
         }
     }
-
-    public static Secao buscarRegistroPorId(int idSecaoPesquisa) {
-        MongoCollection<Document> collection = database.getCollection("secao");
-
-        if (existeRegistro(idSecaoPesquisa)) {
-            try {
-                Document document = collection.find(new Document("id_secao", idSecaoPesquisa)).first();
-                if (document != null) {
-                    Cinema cinema = CinemaController.buscarRegistroPorId(document.getInteger("id_cinema"));
-                    Filme filme = FilmeController.buscarRegistroPorId(document.getInteger("id_filme"));
-                    return new Secao(document.getInteger("id_secao"),
-                            document.getTimestamp("horario"),
-                            cinema,
-                            filme,
-                            document.getInteger("qtd_assentos"));
+   
+    public static Secao buscarRegistroPorId (int idSecaoPesquisa) {
+        if (SecaoController.existeRegistro(idSecaoPesquisa)) {
+            String sql = "SELECT * FROM secao WHERE id_secao = ?";
+    
+            // Inicialização com valores irreais
+            int idSecao = -500, idCinema  = -500, idFilme = -500, qtdAssentos = -500;
+            Timestamp horairo = null;
+    
+            try (Connection conn = Database.conectar();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    
+                pstmt.setInt(1, idSecaoPesquisa);
+    
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    idSecao = rs.getInt("id_secao");
+                    horairo = rs.getTimestamp("horario");
+                    idCinema = rs.getInt("id_cinema");
+                    idFilme = rs.getInt("id_filme");
+                    qtdAssentos = rs.getInt("qtd_assentos");
                 }
-                return null;
-            } catch (Exception e) {
+
+                Cinema cinema = CinemaController.buscarRegistroPorId(idCinema);
+                Filme filme = FilmeController.buscarRegistroPorId(idFilme);
+                
+                return new Secao(idSecao, horairo, cinema, filme, qtdAssentos);
+    
+            } catch (SQLException e) {
                 MenuFormatter.msgTerminalERROR(e.getMessage());
                 return null;
             }
+
         } else {
-            MenuFormatter.msgTerminalERROR("Não encontrado nenhum registro com o ID informado.");
+            MenuFormatter.msgTerminalERROR("Não encontrado nenhum resgistro com o ID informado.");
             return null;
         }
+
     }
 
-    public static LinkedList<Secao> listarTodosRegistros() {
-        MongoCollection<Document> collection = database.getCollection("secao");
-        LinkedList<Secao> listaResgistros = new LinkedList<>();
+    public static LinkedList<Secao> listarTodosRegistros () {
+        LinkedList<Secao> listaResgistros = new LinkedList<Secao>();
+        String sql = "SELECT * FROM secao ORDER BY id_secao ASC";
 
-        try {
-            FindIterable<Document> documents = collection.find().sort(new Document("id_secao", 1));
-            for (Document document : documents) {
-                Cinema cinema = CinemaController.buscarRegistroPorId(document.getInteger("id_cinema"));
-                Filme filme = FilmeController.buscarRegistroPorId(document.getInteger("id_filme"));
-                listaResgistros.add(new Secao(document.getInteger("id_secao"),
-                        document.getTimestamp("horario"),
-                        cinema,
-                        filme,
-                        document.getInteger("qtd_assentos")));
+        int idSecao, idCinema, idFilme, qtdAssentos;
+        Timestamp horairo;
+        Cinema cinema;
+        Filme filme;
+
+        try (Connection conn = Database.conectar();
+            Statement stmt = conn.createStatement()) {
+
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                idSecao = rs.getInt("id_secao");
+                horairo = rs.getTimestamp("horario");
+                idCinema = rs.getInt("id_cinema");
+                idFilme = rs.getInt("id_filme");
+                qtdAssentos = rs.getInt("qtd_assentos");
+
+                cinema = CinemaController.buscarRegistroPorId(idCinema);
+                filme = FilmeController.buscarRegistroPorId(idFilme);
+
+                listaResgistros.add(new Secao(idSecao, horairo, cinema, filme, qtdAssentos));
             }
+
             return listaResgistros;
-        } catch (Exception e) {
+
+        } catch (SQLException e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return null;
         }
     }
+    
+    public static int contarRegistros () {
+        try (Connection conn = Database.conectar();
+            Statement stmt = conn.createStatement()) {
+            
+            int qtdSecao = 0;
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(id_secao) AS resultado FROM secao;");
+            
+            while (rs.next()) {
+                qtdSecao = rs.getInt("resultado");
+            }
 
-    public static int contarRegistros() {
-        MongoCollection<Document> collection = database.getCollection("secao");
+            return qtdSecao;
 
-        try {
-            long count = collection.countDocuments();
-            return (int) count;
-        } catch (Exception e) {
+        } catch (SQLException e) {
             return -999;
         }
     }
 
-    public static boolean existeRegistro(int idSecao) {
-        MongoCollection<Document> collection = database.getCollection("secao");
+    public static boolean existeRegistro (int idSecao) {
+        String sql = "SELECT COUNT(id_secao) AS resultado FROM secao WHERE id_secao = ?;";
+        int qtdSecao = 0;
 
-        try {
-            long count = collection.countDocuments(new Document("id_secao", idSecao));
-            return count > 0;
-        } catch (Exception e) {
+        try (Connection conn = Database.conectar();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, idSecao);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                qtdSecao = rs.getInt("resultado");
+            }
+
+            if (qtdSecao == 0) {
+                return false;
+                
+            } else {
+                return true;
+            }
+
+        } catch (SQLException e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
         }
     }
 
     private static int getMaiorId() {
-        MongoCollection<Document> collection = database.getCollection("secao");
+        String sql = "SELECT id_secao AS resultado FROM secao ORDER BY id_secao DESC LIMIT 1;";
+        int ultimoId = -500;
 
-        try {
-            Document document = collection.find().sort(new Document("id_secao", -1)).first();
-            if (document != null) {
-                return document.getInteger("id_secao");
-            } else {
-                return -500;
+        try (Connection conn = Database.conectar();
+            Statement pstmt = conn.createStatement()) {
+
+            ResultSet rs = pstmt.executeQuery(sql);
+            while (rs.next()) {
+                ultimoId = rs.getInt("resultado");
             }
-        } catch (Exception e) {
+
+            return ultimoId;
+
+        } catch (SQLException e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return -999;
         }

@@ -1,31 +1,23 @@
 package com.trabalho.controllers;
 
 import com.mongodb.client.*;
-import com.mongodb.client.model.*;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-
-import com.trabalho.utils.MenuFormatter;
+import com.trabalho.utils.*;
 import com.trabalho.models.*;
 
 import java.util.LinkedList;
 
-public class VendaController {
+public class FilmeController {
 
-    private static final MongoClient client = MongoClients.create("mongodb://localhost:27017");
-    private static final MongoDatabase database = client.getDatabase("cinema");
-    private static final MongoCollection<Document> vendasCollection = database.getCollection("venda");
+    private static final MongoCollection<Document> filmesCollection = Database.getMongoDatabase().getCollection("filme");
 
-    // Insert a new Venda (sale)
-    public static boolean inserirVenda(Venda venda) {
+    public static boolean inserirRegistro(Filme filme) {
         try {
-            Document document = new Document()
-                .append("nome_cliente", venda.getNomeCliente())
-                .append("assento", venda.getAssento())
-                .append("forma_pagamento", venda.getFormaPagamento())
-                .append("id_secao", venda.getSecao().getIdSecao());
-
-            vendasCollection.insertOne(document);
+            Document document = new Document("nome_filme", filme.getNomeFilme())
+                    .append("preco", filme.getPreco());
+            filmesCollection.insertOne(document);
             return true;
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
@@ -33,21 +25,24 @@ public class VendaController {
         }
     }
 
-    // Delete a Venda by ID
-    public static boolean excluirVenda(int idVenda) {
+    public static boolean excluirRegistro(int idFilme) {
         try {
-            long deletedCount = vendasCollection.deleteOne(Filters.eq("id_venda", idVenda)).getDeletedCount();
-            return deletedCount > 0;
+            Document result = filmesCollection.findOneAndDelete(Filters.eq("id_filme", idFilme));
+            if (result != null) {
+                return true;
+            } else {
+                MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
+                return false;
+            }
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
         }
     }
 
-    // Delete all Vendas
     public static boolean excluirTodosRegistros() {
         try {
-            vendasCollection.deleteMany(new Document());
+            filmesCollection.deleteMany(new Document());
             return true;
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
@@ -55,42 +50,51 @@ public class VendaController {
         }
     }
 
-    // Update a Venda by ID
-    public static boolean atualizarVenda(int idVenda, String nomeCliente, int assento, String formaPagamento, Secao secao) {
+    public static boolean atualizarRegistro(int idFilme, String nomeFilme, double preco) {
         try {
-            Document updatedVenda = new Document()
-                .append("nome_cliente", nomeCliente)
-                .append("assento", assento)
-                .append("forma_pagamento", formaPagamento)
-                .append("id_secao", secao.getIdSecao());
-
-            vendasCollection.updateOne(Filters.eq("id_venda", idVenda), new Document("$set", updatedVenda));
-            return true;
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
-    }
-
-    // Update a Venda using a Venda object
-    public static boolean atualizarVenda(Venda venda) {
-        return atualizarVenda(venda.getIdVenda(), venda.getNomeCliente(), venda.getAssento(), venda.getFormaPagamento(), venda.getSecao());
-    }
-
-    // Find a Venda by ID
-    public static Venda buscarVendaPorId(int idVendaPesquisa) {
-        try {
-            Document doc = vendasCollection.find(Filters.eq("id_venda", idVendaPesquisa)).first();
-            if (doc != null) {
-                String nomeCliente = doc.getString("nome_cliente");
-                int assento = doc.getInteger("assento");
-                String formaPagamento = doc.getString("forma_pagamento");
-                int idSecao = doc.getInteger("id_secao");
-
-                Secao secao = SecaoController.buscarRegistroPorId(idSecao);
-                return new Venda(idVendaPesquisa, nomeCliente, assento, formaPagamento, secao);
+            Document updateDoc = new Document("nome_filme", nomeFilme)
+                    .append("preco", preco);
+            Document result = filmesCollection.findOneAndUpdate(
+                    Filters.eq("id_filme", idFilme),
+                    new Document("$set", updateDoc));
+            if (result != null) {
+                return true;
             } else {
-                MenuFormatter.msgTerminalERROR("Venda não encontrada.");
+                MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
+                return false;
+            }
+        } catch (Exception e) {
+            MenuFormatter.msgTerminalERROR(e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean atualizarRegistro(Filme filme) {
+        try {
+            Document updateDoc = new Document("nome_filme", filme.getNomeFilme())
+                    .append("preco", filme.getPreco());
+            Document result = filmesCollection.findOneAndUpdate(
+                    Filters.eq("id_filme", filme.getIdFilme()),
+                    new Document("$set", updateDoc));
+            if (result != null) {
+                return true;
+            } else {
+                MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
+                return false;
+            }
+        } catch (Exception e) {
+            MenuFormatter.msgTerminalERROR(e.getMessage());
+            return false;
+        }
+    }
+
+    public static Filme buscarRegistroPorId(int idFilmePesquisa) {
+        try {
+            Document doc = filmesCollection.find(Filters.eq("id_filme", idFilmePesquisa)).first();
+            if (doc != null) {
+                return new Filme(doc.getInteger("id_filme"), doc.getString("nome_filme"), doc.getDouble("preco"));
+            } else {
+                MenuFormatter.msgTerminalERROR("Não encontrado nenhum registro com o ID informado.");
                 return null;
             }
         } catch (Exception e) {
@@ -99,41 +103,32 @@ public class VendaController {
         }
     }
 
-    // List all Vendas
-    public static LinkedList<Venda> listarTodosRegistros() {
-        LinkedList<Venda> listaVendas = new LinkedList<>();
+    public static LinkedList<Filme> listarTodosRegistros() {
+        LinkedList<Filme> listaResgistros = new LinkedList<>();
         try {
-            FindIterable<Document> vendas = vendasCollection.find();
-            for (Document doc : vendas) {
-                int idVenda = doc.getInteger("id_venda");
-                String nomeCliente = doc.getString("nome_cliente");
-                int assento = doc.getInteger("assento");
-                String formaPagamento = doc.getString("forma_pagamento");
-                int idSecao = doc.getInteger("id_secao");
-
-                Secao secao = SecaoController.buscarRegistroPorId(idSecao);
-                listaVendas.add(new Venda(idVenda, nomeCliente, assento, formaPagamento, secao));
+            MongoCursor<Document> cursor = filmesCollection.find().iterator();
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                listaResgistros.add(new Filme(doc.getInteger("id_filme"), doc.getString("nome_filme"), doc.getDouble("preco")));
             }
-            return listaVendas;
+            return listaResgistros;
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return null;
         }
     }
 
-    // Count the number of Vendas
     public static int contarRegistros() {
         try {
-            return (int) vendasCollection.countDocuments();
+            return (int) filmesCollection.countDocuments();
         } catch (Exception e) {
             return -999;
         }
     }
 
-    // Check if a Venda exists by ID
-    public static boolean existeVenda(int idVenda) {
+    public static boolean existeRegistro(int idFilme) {
         try {
-            Document doc = vendasCollection.find(Filters.eq("id_venda", idVenda)).first();
+            Document doc = filmesCollection.find(Filters.eq("id_filme", idFilme)).first();
             return doc != null;
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
@@ -141,14 +136,13 @@ public class VendaController {
         }
     }
 
-    // Get the largest id of Venda (you can handle ObjectId if needed)
     private static int getMaiorId() {
         try {
-            Document doc = vendasCollection.find().sort(new Document("id_venda", -1)).first();
+            Document doc = filmesCollection.find().sort(new Document("id_filme", -1)).first();
             if (doc != null) {
-                return doc.getInteger("id_venda");
+                return doc.getInteger("id_filme");
             } else {
-                return -500; // Default value if no documents found
+                return -500;
             }
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
@@ -156,4 +150,3 @@ public class VendaController {
         }
     }
 }
-
