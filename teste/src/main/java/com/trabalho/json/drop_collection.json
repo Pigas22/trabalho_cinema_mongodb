@@ -1,0 +1,10 @@
+{
+    "drop_collections": [
+      "enderecos",
+      "cinemas",
+      "filmes",
+      "sessoes",
+      "vendas"
+    ]
+  }
+  
