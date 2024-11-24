@@ -1,0 +1,45 @@
+{
+    "enderecos": [
+      {
+        "id_endereco": null,
+        "numero": null,
+        "rua": "",
+        "bairro": "",
+        "cidade": "",
+        "uf": ""
+      }
+    ],
+    "cinemas": [
+      {
+        "id_cinema": null,
+        "nome_cinema": "",
+        "id_endereco": null
+      }
+    ],
+    "filmes": [
+      {
+        "id_filme": null,
+        "nome_filme": "",
+        "preco": 0.0
+      }
+    ],
+    "sessoes": [
+      {
+        "id_secao": null,
+        "horario": null,
+        "id_cinema": null,
+        "id_filme": null,
+        "qtd_assentos": 0
+      }
+    ],
+    "vendas": [
+      {
+        "id_venda": null,
+        "nome_cliente": "",
+        "assento": null,
+        "forma_pagamento": "",
+        "id_secao": null
+      }
+    ]
+  }
+  
