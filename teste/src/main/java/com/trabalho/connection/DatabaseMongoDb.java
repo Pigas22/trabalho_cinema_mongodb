@@ -1,4 +1,4 @@
-package com.trabalho.conexion;
+package com.trabalho.connection;
 
 import com.mongodb.client.*;
 import org.bson.Document;
