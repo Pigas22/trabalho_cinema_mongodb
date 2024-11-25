@@ -1,21 +1,33 @@
 package com.trabalho.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
-import java.io.BufferedReader;
+
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 public class Arquivo {
-    private static boolean log = false;
+    private static final boolean LOG = false;
+    private static final String PROJECT_PATH = "teste\\src\\main\\java\\com\\trabalho";
 
     // Método para procurar o caminho absoluto de uma certa pasta (sem mensagens)
     public static String procuraPasta(String nomePasta) {
         String diretorioAtual = System.getProperty("user.dir");
-        String caminhoCompleto = diretorioAtual + File.separator + nomePasta;
+        String caminhoCompleto = diretorioAtual + File.separator + PROJECT_PATH + File.separator + nomePasta;
         File pasta = new File(caminhoCompleto);
         return pasta.getAbsolutePath();
+    }
+
+    public static Dados lerJSON(String caminhoArquivo) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(new File(caminhoArquivo), Dados.class);
+
+        } catch (IOException e) {
+            MenuFormatter.msgTerminalERROR("Erro ao ler o arquivo JSON: " + e.getMessage());
+            return null;
+        }
     }
 
     // Método para buscar documentos de uma coleção MongoDB e retornar como uma String
@@ -33,11 +45,7 @@ public class Arquivo {
         return resultado.toString();
     }
 
-    public static boolean logAtivo() {
-        return Arquivo.log;
-    }
-
-    public static void setLog(boolean log) {
-        Arquivo.log = log;
+    public static boolean isLog() {
+        return LOG;
     }
 }

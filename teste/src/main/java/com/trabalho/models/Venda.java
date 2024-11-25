@@ -1,25 +1,29 @@
 package com.trabalho.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Venda {
     private int idVenda;
     private String nomeCliente;
     private int assento;
     private String formaPagamento;
-    private Secao secao;
-    
-    public Venda(int idVenda, String nomeCliente, int assento, String formaPagamento, Secao secao) {
+    private Sessao sessao;
+
+    public Venda() {}
+
+    public Venda(int idVenda, String nomeCliente, int assento, String formaPagamento, Sessao sessao) {
         this.idVenda = idVenda;
         this.nomeCliente = nomeCliente;
         this.assento = assento;
         this.formaPagamento = formaPagamento;
-        this.secao = secao;
+        this.sessao = sessao;
     }
 
-    public Venda(String nomeCliente, int assento, String formaPagamento, Secao secao) {
+    public Venda(String nomeCliente, int assento, String formaPagamento, Sessao sessao) {
         this.nomeCliente = nomeCliente;
         this.assento = assento;
         this.formaPagamento = formaPagamento;
-        this.secao = secao;
+        this.sessao = sessao;
     }
 
     public int getIdVenda() {
@@ -50,11 +54,11 @@ public class Venda {
         this.formaPagamento = formaPagamento;
     }
     
-    public Secao getSecao() {
-        return this.secao;
+    public Sessao getSessao() {
+        return this.sessao;
     }
-    public void setSecao(Secao secao) {
-        this.secao = secao;
+    public void setSessao(Sessao sessao) {
+        this.sessao = sessao;
     }
 
     public String toString() {
@@ -63,8 +67,14 @@ public class Venda {
                "    nomeCliente = " + nomeCliente + ",\n" + 
                "    assento = " + assento + ",\n" + 
                "    formaPagamento = " + formaPagamento + ",\n" + 
-               "    idSecao = " + secao.getIdSecao() + ",\n" + 
+               "    idSessao = " + sessao.getIdSessao() + ",\n" + 
                "]";
     }
     
+
+    @JsonProperty("idSessao")
+    public void setSessaoById(int idSessao) {
+        this.sessao = new Sessao();
+        this.sessao.setIdSessao(idSessao);
+    }
 }

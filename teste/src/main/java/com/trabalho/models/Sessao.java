@@ -2,33 +2,41 @@ package com.trabalho.models;
 
 import java.sql.Timestamp;
 
-public class Secao {
-    private int idSecao;
-    private Timestamp horario;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class Sessao {
+    private int idSessao;
     private int qtdAssentos;
     private Cinema cinema;
     private Filme filme;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Timestamp horario;
     
-    public Secao(int idSecao, Timestamp horario, Cinema cinema, Filme filme, int qtdAssentos) {
-        this.idSecao = idSecao;
+    
+    public Sessao() {}
+
+    public Sessao(int idSessao, Timestamp horario, Cinema cinema, Filme filme, int qtdAssentos) {
+        this.idSessao = idSessao;
         this.horario = horario;
         this.qtdAssentos = qtdAssentos;
         this.cinema = cinema;
         this.filme = filme;
     }
 
-    public Secao(Timestamp horario, Cinema cinema, Filme filme, int qtdAssentos) {
+    public Sessao(Timestamp horario, Cinema cinema, Filme filme, int qtdAssentos) {
         this.horario = horario;
         this.qtdAssentos = qtdAssentos;
         this.cinema = cinema;
         this.filme = filme;
     }
 
-    public int getIdSecao() {
-        return idSecao;
+    public int getIdSessao() {
+        return idSessao;
     }
-    public void setIdSecao(int idSecao) {
-        this.idSecao = idSecao;
+    public void setIdSessao(int idSessao) {
+        this.idSessao = idSessao;
     }
 
     public Timestamp getHorario() {
@@ -61,12 +69,25 @@ public class Secao {
     }
 
     public String toString() {
-        return "Secao [" + "\n" + 
-               "    idSecao = " + idSecao + ",\n" +  
+        return "Sessao [" + "\n" + 
+               "    idSessao = " + idSessao + ",\n" +  
                "    horario = " + horario + ",\n" + 
                "    idCinema = " + cinema.getIdCinema() + ",\n" + 
                "    idFilme = " + filme.getIdFilme() + ",\n" + 
                "    qtdAssentos = " + qtdAssentos + ",\n" + 
                "]";
+    }
+
+
+    @JsonProperty("idCinema")
+    public void setCinemaById(int idCinema) {
+        this.cinema = new Cinema();
+        this.cinema.setIdCinema(idCinema);
+    }
+
+    @JsonProperty("idFilme")
+    public void setFilmeById(int idFilme) {
+        this.filme = new Filme ();
+        this.filme.setIdFilme(idFilme);
     }
 }

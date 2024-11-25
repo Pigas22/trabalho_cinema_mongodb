@@ -157,8 +157,8 @@ public class Menu {
 
     }
 
-    public static void menuInserirSecao() throws IOException, InterruptedException {
-        MenuFormatter.titulo("INSERIR - SECAO");
+    public static void menuInserirSessao() throws IOException, InterruptedException {
+        MenuFormatter.titulo("INSERIR - SESSAO");
 
         List<Cinema> cinemas = CinemaController.listarTodosRegistros();
         if (cinemas.isEmpty()) {
@@ -239,7 +239,7 @@ public class Menu {
         int qtd_assento = scanner.nextInt();
     
         //insira no banco de dados
-        SecaoController.inserirRegistro(new Secao(horario, cinemaSelecionado, filmeSelecionado, qtd_assento));
+        SessaoController.inserirRegistro(new Sessao(horario, cinemaSelecionado, filmeSelecionado, qtd_assento));
     
         MenuFormatter.msgTerminalINFO("Seção inserido com sucesso!");
     }
@@ -247,7 +247,7 @@ public class Menu {
     public static void menuInserirVenda() {
         MenuFormatter.titulo("INSERIR - VENDA");
 
-        List<Secao> secoes = SecaoController.listarTodosRegistros();
+        List<Sessao> secoes = SessaoController.listarTodosRegistros();
         if (secoes.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhuma seção disponível. Por favor, insira uma seção antes.");
             return;
@@ -256,18 +256,18 @@ public class Menu {
         
         int tamanho = MenuFormatter.getNumEspacamentoUni()+2;
         String[] cabecalho = {"ID", "Nome Filme", "Horário", "Cinema"};
-        String[] linhas = new String[SecaoController.contarRegistros()];
+        String[] linhas = new String[SessaoController.contarRegistros()];
         int cont = 0;
 
         LocalDateTime localDateTime;
         DateTimeFormatter formatter;
 
-        for (Secao secao : secoes) {
-            localDateTime = secao.getHorario().toLocalDateTime();
+        for (Sessao sessao : secoes) {
+            localDateTime = sessao.getHorario().toLocalDateTime();
             formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-            String[] linha = {secao.getIdSecao()+"", secao.getFilme().getNomeFilme(), localDateTime.format(formatter),
-                            secao.getCinema().getNomeCinema()};
+            String[] linha = {sessao.getIdSessao()+"", sessao.getFilme().getNomeFilme(), localDateTime.format(formatter),
+                            sessao.getCinema().getNomeCinema()};
             linhas[cont] = MenuFormatter.criarLinhaTabela(linha, tamanho);
             cont++;
             
@@ -277,18 +277,18 @@ public class Menu {
         MenuFormatter.linha();
         
         System.out.print("Escolha uma seção pelo ID: ");
-        int idSecao = scanner.nextInt();
+        int idSessao = scanner.nextInt();
         scanner.nextLine(); // Consumir a nova linha
 
-        Secao secaoSelecionado = null;
-        for (Secao secao : secoes) {
-            if (secao.getIdSecao() == idSecao) {
-                secaoSelecionado = secao;
+        Sessao sessaoSelecionado = null;
+        for (Sessao sessao : secoes) {
+            if (sessao.getIdSessao() == idSessao) {
+                sessaoSelecionado = sessao;
                 break; // Adicionado para sair do loop quando a seção for encontrada
             }
         }
 
-        if (secaoSelecionado == null) {
+        if (sessaoSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de seção inválido");
             return; // Adicionado para interromper a execução
         }
@@ -300,7 +300,7 @@ public class Menu {
         System.out.print("Digite a forma de pagamento: ");
         String formaPagamento = scanner.nextLine();
 
-        VendaController.inserirVenda(new Venda(nome, assento, formaPagamento, secaoSelecionado));
+        VendaController.inserirVenda(new Venda(nome, assento, formaPagamento, sessaoSelecionado));
 }
 
     // metodos para remover
@@ -431,30 +431,30 @@ public class Menu {
         FilmeController.excluirRegistro(idFilme);
     }
 
-    public static void menuRemoverSecao() {
+    public static void menuRemoverSessao() {
 
         MenuFormatter.titulo("REMOVER - SEÇÃO");
 
-        List<Secao> secoes = SecaoController.listarTodosRegistros();
+        List<Sessao> secoes = SessaoController.listarTodosRegistros();
         if (secoes.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhuma sessão disponível. Por favor, insira uma sessão antes.");
             return;
         }
 
         String[] cabecalho = {"ID", "Nome Cinema", "Nome Filme", "Horário"};
-        String[] linhas = new String[SecaoController.contarRegistros()];
+        String[] linhas = new String[SessaoController.contarRegistros()];
         int tamanho = MenuFormatter.getNumEspacamentoUni()+2;
         int cont = 0;
 
         LocalDateTime localDateTime;
         DateTimeFormatter formatter;
     
-        for (Secao secao : secoes) {
-            localDateTime = secao.getHorario().toLocalDateTime();
+        for (Sessao sessao : secoes) {
+            localDateTime = sessao.getHorario().toLocalDateTime();
             formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-            String[] linha = {secao.getIdSecao()+"", secao.getCinema().getNomeCinema(), 
-                        secao.getFilme().getNomeFilme(), localDateTime.format(formatter)};
+            String[] linha = {sessao.getIdSessao()+"", sessao.getCinema().getNomeCinema(), 
+                        sessao.getFilme().getNomeFilme(), localDateTime.format(formatter)};
             linhas[cont] = MenuFormatter.criarLinhaTabela(linha, tamanho);
             cont++;
         }
@@ -463,21 +463,21 @@ public class Menu {
         MenuFormatter.linha();
         
         System.out.print("Escolha uma Sessão pelo ID:");
-        int idSecao = scanner.nextInt();
+        int idSessao = scanner.nextInt();
 
-        Secao secaoSelecionada = null;
-        for (Secao secao : secoes) {
-            if (secao.getIdSecao() == idSecao) {
-                secaoSelecionada = secao;
+        Sessao sessaoSelecionada = null;
+        for (Sessao sessao : secoes) {
+            if (sessao.getIdSessao() == idSessao) {
+                sessaoSelecionada = sessao;
             }
         }
     
-        if (secaoSelecionada == null) {
+        if (sessaoSelecionada == null) {
             MenuFormatter.msgTerminalERROR("ID de sessão inválido.");
             return;
         }
     
-        SecaoController.excluirRegistro(idSecao);
+        SessaoController.excluirRegistro(idSessao);
     }
 
     public static void menuRemoverVenda() {
@@ -499,7 +499,7 @@ public class Menu {
         DateTimeFormatter formatter;
 
         for (Venda venda : vendas) {
-            localDateTime = venda.getSecao().getHorario().toLocalDateTime();
+            localDateTime = venda.getSessao().getHorario().toLocalDateTime();
             formatter = DateTimeFormatter.ofPattern("HH:mm");
 
             String[] linha = {venda.getIdVenda()+"", venda.getNomeCliente(), localDateTime.format(formatter), venda.getAssento()+""};
@@ -665,26 +665,26 @@ public class Menu {
         FilmeController.atualizarRegistro(filmeSelecionado);
     }
 
-    public static void menuAlterarSecao() {
-        if (SecaoController.contarRegistros() == 0) {
+    public static void menuAlterarSessao() {
+        if (SessaoController.contarRegistros() == 0) {
             MenuFormatter.msgTerminalERROR("Nenhuma Seção disponível.");
             return;
         }
 
         String[] cabecalho = {"ID", "Horário", "Cinema", "Filme"};
-        String[] linhas = new String[SecaoController.contarRegistros()];
+        String[] linhas = new String[SessaoController.contarRegistros()];
         int tamanho = MenuFormatter.getNumEspacamentoUni();
         int cont = 0;
 
         LocalDateTime localDateTime;
         DateTimeFormatter formatter;
 
-        for (Secao secao : SecaoController.listarTodosRegistros()){
-            localDateTime = secao.getHorario().toLocalDateTime();
+        for (Sessao sessao : SessaoController.listarTodosRegistros()){
+            localDateTime = sessao.getHorario().toLocalDateTime();
             formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-            String[] linha = {secao.getIdSecao()+"", localDateTime.format(formatter),
-                            secao.getCinema().getNomeCinema(), secao.getFilme().getNomeFilme()};
+            String[] linha = {sessao.getIdSessao()+"", localDateTime.format(formatter),
+                            sessao.getCinema().getNomeCinema(), sessao.getFilme().getNomeFilme()};
    
             linhas[cont] = MenuFormatter.criarLinhaTabela(linha, tamanho);
             cont++;
@@ -694,10 +694,10 @@ public class Menu {
         MenuFormatter.linha();
 
         System.out.print("Escolha a Seção que deseja alterar pelo ID: ");
-        int idSecao = scanner.nextInt();
+        int idSessao = scanner.nextInt();
         
-        Secao secaoSelecionado = SecaoController.buscarRegistroPorId(idSecao);
-        if (secaoSelecionado == null) {
+        Sessao sessaoSelecionado = SessaoController.buscarRegistroPorId(idSessao);
+        if (sessaoSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de Seção inválido.");
             return;
         }
@@ -705,28 +705,28 @@ public class Menu {
         System.out.print("Horario do Filme (formato: yyyy-MM-dd HH:mm:ss): ");
         scanner.nextLine();
         String horarioStr = scanner.nextLine();
-        secaoSelecionado.setHorario(Timestamp.valueOf(horarioStr));
+        sessaoSelecionado.setHorario(Timestamp.valueOf(horarioStr));
 
         System.out.print("Quantidade de Assentos: ");
-        secaoSelecionado.setQtdAssentos(scanner.nextInt());
+        sessaoSelecionado.setQtdAssentos(scanner.nextInt());
 
         System.out.print("ID do Cinema: ");
-        secaoSelecionado.setCinema(CinemaController.buscarRegistroPorId(scanner.nextInt()));
+        sessaoSelecionado.setCinema(CinemaController.buscarRegistroPorId(scanner.nextInt()));
 
-        if (!CinemaController.existeRegistro(secaoSelecionado.getCinema().getIdCinema())) {
+        if (!CinemaController.existeRegistro(sessaoSelecionado.getCinema().getIdCinema())) {
             MenuFormatter.msgTerminalERROR("Cinema não encontrado");
             return;
         }
 
         System.out.print("ID do Filme: ");
-        secaoSelecionado.setFilme(FilmeController.buscarRegistroPorId(scanner.nextInt()));
+        sessaoSelecionado.setFilme(FilmeController.buscarRegistroPorId(scanner.nextInt()));
 
-        if (!FilmeController.existeRegistro(secaoSelecionado.getFilme().getIdFilme())) {
+        if (!FilmeController.existeRegistro(sessaoSelecionado.getFilme().getIdFilme())) {
             MenuFormatter.msgTerminalERROR("Filme não encontrado.");
             return;
         }
 
-        SecaoController.atualizarRegistro(secaoSelecionado);
+        SessaoController.atualizarRegistro(sessaoSelecionado);
     }
 
     public static void menuAlterarVenda() {
@@ -742,7 +742,7 @@ public class Menu {
 
         for (Venda venda : VendaController.listarTodosRegistros()){
             String[] linha = {venda.getIdVenda()+"", venda.getNomeCliente(), venda.getAssento()+"",
-                        venda.getFormaPagamento(), venda.getSecao().getIdSecao()+""};
+                        venda.getFormaPagamento(), venda.getSessao().getIdSessao()+""};
 
             linhas[cont] = MenuFormatter.criarLinhaTabela(linha, tamanho);
             cont++;
@@ -772,9 +772,9 @@ public class Menu {
         vendaSelacionada.setFormaPagamento(scanner.nextLine());
 
         System.out.print("ID da Seção: ");
-        vendaSelacionada.setSecao(SecaoController.buscarRegistroPorId(scanner.nextInt()));
+        vendaSelacionada.setSessao(SessaoController.buscarRegistroPorId(scanner.nextInt()));
 
-        if (!SecaoController.existeRegistro(vendaSelacionada.getSecao().getIdSecao())) {
+        if (!SessaoController.existeRegistro(vendaSelacionada.getSessao().getIdSessao())) {
             MenuFormatter.msgTerminalERROR("Seção não encontrada");
             return;
         }
@@ -789,7 +789,7 @@ public class Menu {
             Integer.toString(EnderecoController.contarRegistros()),
             Integer.toString(CinemaController.contarRegistros()),
             Integer.toString(FilmeController.contarRegistros()),
-            Integer.toString(SecaoController.contarRegistros()),
+            Integer.toString(SessaoController.contarRegistros()),
             Integer.toString(VendaController.contarRegistros())
         };
 

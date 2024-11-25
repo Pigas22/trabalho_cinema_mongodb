@@ -59,7 +59,7 @@ Assim que iniciada, apresentará uma pergunta referente à reiniciar o Banco, ca
 
 ### 📚 Estrutura e Organização:
 - [<u>__Diagrama__</u>](https://github.com/Pigas22/trabalho_cinema/blob/7de34f80d0dfecd6e82d4931a69262986e2eaa1c/Diagrama) : Pasta referente ao Diagrama Relacional de Banco de Dados desenvolvido.
-    - A aplicação possue 5 tabelas/entidades, sendo elas: ENDERECO, CINEMA, VENDA, SECAO e FILME.
+    - A aplicação possue 5 tabelas/entidades, sendo elas: ENDERECO, CINEMA, VENDA, SESSAO e FILME.
 - [<u>__lib__</u>](https://github.com/Pigas22/trabalho_cinema/blob/7de34f80d0dfecd6e82d4931a69262986e2eaa1c/lib) : Nesta pasta se encontra as bibliotecas externas utilizadas no desenvolvimento.
     - No caso deste projeto, apenas [<u>a biblioteca</u>](https://github.com/Pigas22/trabalho_cinema/blob/7de34f80d0dfecd6e82d4931a69262986e2eaa1c/lib/postgresql-42.7.4.jar) que possibilita a comunicação entre a Linguagem de Programação (Java) e o Banco de Dados (PostgreSQL), por meio do [**`JDBC`**](https://napoleon.com.br/glossario/o-que-e-jdbc-java-database-connectivity/).
 - [<u>__SQL__</u>](https://github.com/Pigas22/trabalho_cinema/blob/2ee1da0ac8e987bb843b5cd08df91a2388eee71c/SQL) : Nesta pasta estão todos os arquivos SQL desenvolvidos.

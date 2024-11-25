@@ -5,6 +5,8 @@ public class Filme {
     private String nomeFilme;
     private double preco;
 
+    public Filme () {}
+
     public Filme(int idFilme, String nomeFilme, double preco) {
         this.idFilme = idFilme;
         this.nomeFilme = nomeFilme;
@@ -39,9 +41,9 @@ public class Filme {
 
     public String toString() {
         return "Filema [" + "\n" + 
-               "    idEndereco = " + idFilme + ",\n" +  
+               "    idFilme = " + idFilme + ",\n" +  
                "    nomeFilme = " + nomeFilme + ",\n" + 
-               "    preco = " + preco + ",\n" + 
+               "    preco = " + preco + "\n" + 
                "]";
     }
 }

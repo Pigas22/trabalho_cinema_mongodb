@@ -1,45 +1,86 @@
 {
     "enderecos": [
-      {
-        "id_endereco": null,
-        "numero": null,
-        "rua": "",
-        "bairro": "",
-        "cidade": "",
-        "uf": ""
-      }
+        {"idEndereco": 1, "numero": "100",  "rua": "Rua das Flores",       "bairro": "Centro",     "cidade": "Sao Paulo",      "uf": "SP"},
+        {"idEndereco": 2, "numero": "200",  "rua": "Avenida Brasil",       "bairro": "Copacabana", "cidade": "Rio de Janeiro", "uf": "RJ"},
+        {"idEndereco": 3, "numero": "300",  "rua": "XV de Novembro",       "bairro": "Centro",     "cidade": "Curitiba",       "uf": "PR"},
+        {"idEndereco": 4, "numero": "50",   "rua": "Praça da Se",          "bairro": "Se",         "cidade": "Sao Paulo",      "uf": "SP"},
+        {"idEndereco": 5, "numero": "150",  "rua": "Sete de Setembro",     "bairro": "Centro",     "cidade": "Porto Alegre",   "uf": "RS"},
+        {"idEndereco": 6, "numero": "1000", "rua": "Avenida Paulista",     "bairro": "Bela Vista", "cidade": "Sao Paulo",      "uf": "SP"}
     ],
     "cinemas": [
-      {
-        "id_cinema": null,
-        "nome_cinema": "",
-        "id_endereco": null
-      }
+        {"idCinema": 1, "nomeCinema": "Cine Plaza", "idEndereco": 1},
+        {"idCinema": 2, "nomeCinema": "Cinemark",   "idEndereco": 2},
+        {"idCinema": 3, "nomeCinema": "Cinepolis",  "idEndereco": 3},
+        {"idCinema": 4, "nomeCinema": "Cine Arte",  "idEndereco": 4}
     ],
     "filmes": [
-      {
-        "id_filme": null,
-        "nome_filme": "",
-        "preco": 0.0
-      }
+        {"idFilme": 1,  "nomeFilme": "O Poderoso Chefao", "preco": 19.99},
+        {"idFilme": 2,  "nomeFilme": "Matrix",            "preco": 14.50},
+        {"idFilme": 3,  "nomeFilme": "Senhor dos Aneis",  "preco": 18.75},
+        {"idFilme": 4,  "nomeFilme": "Inception",         "preco": 17.99},
+        {"idFilme": 5,  "nomeFilme": "Avatar",            "preco": 21.00},
+        {"idFilme": 6,  "nomeFilme": "Titanic",           "preco": 15.30},
+        {"idFilme": 7,  "nomeFilme": "Gladiador",         "preco": 16.50},
+        {"idFilme": 8,  "nomeFilme": "Jurassic Park",     "preco": 13.90},
+        {"idFilme": 9,  "nomeFilme": "Star Wars",         "preco": 20.00},
+        {"idFilme": 10, "nomeFilme":  "O Rei Leao",       "preco": 12.80}
     ],
     "sessoes": [
-      {
-        "id_secao": null,
-        "horario": null,
-        "id_cinema": null,
-        "id_filme": null,
-        "qtd_assentos": 0
-      }
+        {"idSessao": 1,  "horario": "2024-10-20 14:00:00", "idCinema": 1, "idFilme": 1, "qtdAssentos": 20},
+        {"idSessao": 2,  "horario": "2024-10-20 16:00:00", "idCinema": 1, "idFilme": 3, "qtdAssentos": 15},
+        {"idSessao": 3,  "horario": "2024-10-20 18:00:00", "idCinema": 1, "idFilme": 4, "qtdAssentos": 25},
+        {"idSessao": 4,  "horario": "2024-10-20 19:30:00", "idCinema": 1, "idFilme": 6, "qtdAssentos": 10},
+
+        {"idSessao": 5,  "horario": "2024-10-21 14:00:00", "idCinema": 2, "idFilme": 2, "qtdAssentos": 18},
+        {"idSessao": 6,  "horario": "2024-10-21 16:00:00", "idCinema": 2, "idFilme": 5, "qtdAssentos": 22},
+        {"idSessao": 7,  "horario": "2024-10-21 18:00:00", "idCinema": 2, "idFilme": 7, "qtdAssentos": 10},
+        {"idSessao": 8,  "horario": "2024-10-21 19:30:00", "idCinema": 2, "idFilme": 8, "qtdAssentos": 15},
+
+        {"idSessao": 9,  "horario": "2024-10-22 14:00:00", "idCinema": 3, "idFilme": 1, "qtdAssentos": 12},
+        {"idSessao": 10, "horario": "2024-10-22 16:00:00", "idCinema": 3, "idFilme": 4, "qtdAssentos": 15},
+        {"idSessao": 11, "horario": "2024-10-22 18:00:00", "idCinema": 3, "idFilme": 6, "qtdAssentos": 25},
+        {"idSessao": 12, "horario": "2024-10-22 19:30:00", "idCinema": 3, "idFilme": 9, "qtdAssentos": 20},
+
+        {"idSessao": 13, "horario": "2024-10-23 14:00:00", "idCinema": 4, "idFilme": 3, "qtdAssentos": 15},
+        {"idSessao": 14, "horario": "2024-10-23 16:00:00", "idCinema": 4, "idFilme": 4, "qtdAssentos": 16},
+        {"idSessao": 15, "horario": "2024-10-23 18:00:00", "idCinema": 4, "idFilme": 7, "qtdAssentos": 25},
+        {"idSessao": 16, "horario": "2024-10-23 19:30:00", "idCinema": 4, "idFilme": 8, "qtdAssentos": 20}
     ],
     "vendas": [
-      {
-        "id_venda": null,
-        "nome_cliente": "",
-        "assento": null,
-        "forma_pagamento": "",
-        "id_secao": null
-      }
+        {"idVenda": 1,  "nomeCliente": "João Silva",        "assento": 1, "formaPagamento": "Cartao de Credito",   "idSessao": 1},
+        {"idVenda": 2,  "nomeCliente": "Maria Oliveira",    "assento": 2, "formaPagamento": "Dinheiro",            "idSessao": 1},
+        {"idVenda": 3,  "nomeCliente": "Carlos Pereira",    "assento": 3, "formaPagamento": "Cartao de Debito",    "idSessao": 1},
+        {"idVenda": 4,  "nomeCliente": "Ana Santos",        "assento": 4, "formaPagamento": "Pix",                 "idSessao": 1},
+        {"idVenda": 5,  "nomeCliente": "Fernanda Costa",    "assento": 5, "formaPagamento": "Cartao de Credito",   "idSessao": 1},
+
+        {"idVenda": 6,  "nomeCliente": "Roberto Almeida",   "assento": 1, "formaPagamento": "Dinheiro",            "idSessao": 2},
+        {"idVenda": 7,  "nomeCliente": "Patricia Lima",     "assento": 2, "formaPagamento": "Cartao de Debito",    "idSessao": 2},
+        {"idVenda": 8,  "nomeCliente": "Lucas Martins",     "assento": 3, "formaPagamento": "Pix",                 "idSessao": 2},
+        {"idVenda": 9,  "nomeCliente": "Cláudia Rocha",     "assento": 4, "formaPagamento": "Cartao de Credito",   "idSessao": 2},
+        {"idVenda": 10, "nomeCliente": "Mariana Gomes",     "assento": 5, "formaPagamento": "Dinheiro",            "idSessao": 2},
+
+        {"idVenda": 11, "nomeCliente": "Ricardo Dias",      "assento": 1, "formaPagamento": "Cartao de Credito",   "idSessao": 3},
+        {"idVenda": 12, "nomeCliente": "Tatiane Ferreira",  "assento": 2, "formaPagamento": "Dinheiro",            "idSessao": 3},
+        {"idVenda": 13, "nomeCliente": "Felipe Cardoso",    "assento": 3, "formaPagamento": "Cartao de Debito",    "idSessao": 3},
+        {"idVenda": 14, "nomeCliente": "Juliana Pires",     "assento": 4, "formaPagamento": "Pix",                 "idSessao": 3},
+        {"idVenda": 15, "nomeCliente": "Eduardo Almeida",   "assento": 5, "formaPagamento": "Cartao de Credito",   "idSessao": 3},
+
+        {"idVenda": 16, "nomeCliente": "Renato Martins",    "assento": 1, "formaPagamento": "Dinheiro",            "idSessao": 4},
+        {"idVenda": 17, "nomeCliente": "Viviane Souza",     "assento": 2, "formaPagamento": "Cartao de Debito",    "idSessao": 4},
+        {"idVenda": 18, "nomeCliente": "Hugo Alves",        "assento": 3, "formaPagamento": "Pix",                 "idSessao": 4},
+        {"idVenda": 19, "nomeCliente": "Priscila Ferreira", "assento": 4, "formaPagamento": "Cartao de Credito",   "idSessao": 4},
+        {"idVenda": 20, "nomeCliente": "Gustavo Rocha",     "assento": 5, "formaPagamento": "Dinheiro",            "idSessao": 4},
+        
+        {"idVenda": 21, "nomeCliente": "Bianca Silva",      "assento": 1, "formaPagamento": "Cartao de Credito",   "idSessao": 5},
+        {"idVenda": 22, "nomeCliente": "Daniel Oliveira",   "assento": 2, "formaPagamento": "Dinheiro",            "idSessao": 5},
+        {"idVenda": 23, "nomeCliente": "Marcos Santos",     "assento": 3, "formaPagamento": "Cartao de Debito",    "idSessao": 5},
+        {"idVenda": 24, "nomeCliente": "Camila Costa",      "assento": 4, "formaPagamento": "Pix",                 "idSessao": 5},
+        {"idVenda": 25, "nomeCliente": "Andre Lima",        "assento": 5, "formaPagamento": "Cartao de Credito",   "idSessao": 5},
+
+        {"idVenda": 26, "nomeCliente": "Paula Almeida",     "assento": 1, "formaPagamento": "Dinheiro",            "idSessao": 6},
+        {"idVenda": 27, "nomeCliente": "Vinicius Martins",  "assento": 2, "formaPagamento": "Cartao de Debito",    "idSessao": 6},
+        {"idVenda": 28, "nomeCliente": "Tatiane Rocha",     "assento": 3, "formaPagamento": "Pix",                 "idSessao": 6},
+        {"idVenda": 29, "nomeCliente": "Luana Pires",       "assento": 4, "formaPagamento": "Cartao de Credito",   "idSessao": 6},
+        {"idVenda": 30, "nomeCliente": "Leonardo Dias",     "assento": 5, "formaPagamento": "Dinheiro",            "idSessao": 6}
     ]
   }
-  

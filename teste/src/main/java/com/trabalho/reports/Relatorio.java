@@ -79,11 +79,11 @@ public class Relatorio {
             FindIterable<Document> docs = ingressosCollection.find();
             int cont = 0;
             for (Document doc : docs) {
-                int secaoID = doc.getInteger("id_secao");
+                int sessaoID = doc.getInteger("id_sessao");
                 String nomeFilme = doc.getString("nome_filme");
                 String valorFinal = doc.getString("valor_final");
 
-                String[] linha = {String.valueOf(secaoID), nomeFilme, valorFinal};
+                String[] linha = {String.valueOf(sessaoID), nomeFilme, valorFinal};
                 linhas[cont] = MenuFormatter.criarLinhaTabela(linha, tamanho);
                 cont++;
             }

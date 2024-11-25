@@ -3,15 +3,15 @@ package com.trabalho.controllers;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import com.trabalho.utils.MenuFormatter;
+import com.trabalho.conexion.DatabaseMongoDb;
 import com.trabalho.models.*;
 
 import java.util.LinkedList;
 
 public class FilmeController {
 
-    private static final MongoCollection<Document> filmesCollection = Database.getMongoDatabase().getCollection("filme");
+    private static final MongoCollection<Document> filmesCollection = DatabaseMongoDb.conectar().getCollection("filme");
 
     public static boolean inserirRegistro(Filme filme) {
         try {
