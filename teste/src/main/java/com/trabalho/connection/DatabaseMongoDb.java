@@ -11,7 +11,7 @@ import com.trabalho.models.Venda;
 import com.trabalho.utils.*;
 
 public class DatabaseMongoDb {
-    private static final String NOME_DATABASE = "conexion_mongo_db";
+    private static final String NOME_DATABASE = "cinema_mongo_db";
     private static final String URL_MONGODB = "mongodb://localhost:27017/";
     
     private static final String[] COLLETIONS_NAMES = { "enderecos", "cinemas", "filmes", "sessoes", "vendas" }; 
