@@ -1,35 +1,46 @@
 package com.trabalho.reports;
 
-import com.mongodb.client.*;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.AggregateIterable;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.FindIterable;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import org.bson.conversions.Bson;
 import org.bson.Document;
+
+import com.trabalho.connection.*;
 import com.trabalho.utils.*;
 
-public class Relatorio {
-    private static final MongoCollection<Document> cinemaCollection = Database.getMongoDatabase().getCollection("cinema");
-    private static final MongoCollection<Document> informacaoCollection = Database.getMongoDatabase().getCollection("informacao");
-    private static final MongoCollection<Document> ingressosCollection = Database.getMongoDatabase().getCollection("ingressos");
-
-    public static String listarCinemaEndereco() {
-        String[] cabecalho = {"Cinema", "Endereço (Rua)"};
-
-        int qtdResultado = contarRegistros(cinemaCollection);
-
-        String[] linhas = new String[qtdResultado];
-        int tamanho = MenuFormatter.getNumEspacamentoUni() + 2;
-
+abstract class Relatorio {
+    public static LinkedList<DadosSomaIngressos> listaDadosSomaIngressos() {
+        LinkedList<DadosSomaIngressos> relatSomaIngresso = new LinkedList<DadosSomaIngressos>();
         try {
-            FindIterable<Document> docs = cinemaCollection.find();
-            int cont = 0;
-            for (Document doc : docs) {
-                String nomeCinema = doc.getString("nome_cinema");
-                String enderecoRua = doc.getString("rua");
+            MongoCollection<Document> sessoes = DatabaseMongoDb.conectar().getCollection("sessao");
 
-                String[] linha = {nomeCinema, enderecoRua};
-                linhas[cont] = MenuFormatter.criarLinhaTabela(linha, tamanho);
-                cont++;
+            // Agregação para calcular valor total por seção
+            List<Bson> pipeline = List.of(
+                Aggregates.group(
+                    "$id_sessao",
+                    Accumulators.sum("valor_total", "$preco"),
+                    Accumulators.first("filme", "$filme")
+                )
+            );
+
+            AggregateIterable<Document> resultados = sessoes.aggregate(pipeline);
+
+            for (Document doc : resultados) {
+                int secaoID = doc.getInteger("_id");
+                String nomeFilme = doc.getString("filme");
+                double valorTotal = doc.getDouble("valor_total");
+
+                relatSomaIngresso.add(new DadosSomaIngressos(secaoID, nomeFilme, valorTotal));   
             }
 
-            return MenuFormatter.criaTabelaCompleta(cabecalho, linhas, tamanho);
+            return relatSomaIngresso;
 
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
@@ -37,29 +48,25 @@ public class Relatorio {
         }
     }
 
-    public static String listarInformacoes() {
-        String[] cabecalho = {"Horário", "Filme", "Qtd Assentos", "Preço (R$)"};
-
-        int qtdResultado = contarRegistros(informacaoCollection);
-
-        String[] linhas = new String[qtdResultado];
-        int tamanho = MenuFormatter.getNumEspacamentoUni() + 2;
-
+    public static LinkedList<DadosInformacaoSessoes> listarInfoSessoes() {
+        LinkedList<DadosInformacaoSessoes> relatInfoSessoes = new LinkedList<DadosInformacaoSessoes>();
         try {
-            FindIterable<Document> docs = informacaoCollection.find();
-            int cont = 0;
-            for (Document doc : docs) {
+            MongoCollection<Document> sessoes = DatabaseMongoDb.conectar().getCollection("sessao");
+
+            // Projeção para dados necessários
+            FindIterable<Document> resultados = sessoes.find()
+                .projection(new Document("horario", 1).append("filme", 1).append("qtd_assentos", 1).append("preco", 1));
+
+            for (Document doc : resultados) {
                 String horario = doc.getString("horario");
+                String nomeFilme = doc.getString("filme");
                 int qtdAssentos = doc.getInteger("qtd_assentos");
-                String nomeFilme = doc.getString("nome_filme");
                 double preco = doc.getDouble("preco");
 
-                String[] linha = {horario, nomeFilme, String.valueOf(qtdAssentos), String.valueOf(preco)};
-                linhas[cont] = MenuFormatter.criarLinhaTabela(linha, tamanho);
-                cont++;
+                relatInfoSessoes.add(new DadosInformacaoSessoes (horario, nomeFilme, qtdAssentos,preco));
             }
 
-            return MenuFormatter.criaTabelaCompleta(cabecalho, linhas, tamanho);
+            return relatInfoSessoes;
 
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
@@ -67,28 +74,25 @@ public class Relatorio {
         }
     }
 
-    public static String listarSomaIngressos() {
-        String[] cabecalho = {"ID Seção", "Nome Filme", "Valor Total"};
-
-        int qtdResultado = contarRegistros(ingressosCollection);
-
-        String[] linhas = new String[qtdResultado];
-        int tamanho = MenuFormatter.getNumEspacamentoUni() + 2;
+    public static LinkedList<DadosCinemaEndereco> listarCinemaEndereco() {
+        LinkedList<DadosCinemaEndereco> relatCinemaEndereco = new LinkedList<DadosCinemaEndereco>();
 
         try {
-            FindIterable<Document> docs = ingressosCollection.find();
-            int cont = 0;
-            for (Document doc : docs) {
-                int sessaoID = doc.getInteger("id_sessao");
-                String nomeFilme = doc.getString("nome_filme");
-                String valorFinal = doc.getString("valor_final");
+            MongoCollection<Document> cinemas = DatabaseMongoDb.conectar().getCollection("cinema");
 
-                String[] linha = {String.valueOf(sessaoID), nomeFilme, valorFinal};
-                linhas[cont] = MenuFormatter.criarLinhaTabela(linha, tamanho);
-                cont++;
+            // Projeção para nome do cinema e rua do endereço
+            FindIterable<Document> resultados = cinemas.find()
+                .projection(new Document("nome_cinema", 1).append("endereco.rua", 1));
+
+            for (Document doc : resultados) {
+                String nomeCinema = doc.getString("nome_cinema");
+                String enderecoRua = doc.getEmbedded(List.of("endereco", "rua"), String.class);
+
+                
+                relatCinemaEndereco.add(new DadosCinemaEndereco(nomeCinema, enderecoRua));
             }
 
-            return MenuFormatter.criaTabelaCompleta(cabecalho, linhas, tamanho);
+            return relatCinemaEndereco;
 
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
@@ -96,11 +100,26 @@ public class Relatorio {
         }
     }
 
-    public static int contarRegistros(MongoCollection<Document> collection) {
-        try {
-            return (int) collection.countDocuments();
-        } catch (Exception e) {
-            return -999;
+    public static void main(String[] args) {
+        /* TESTE 01
+        for (DadosSomaIngressos item : Relatorio.listaDadosSomaIngressos()) {
+            System.out.println(item);
+            MenuFormatter.linha();
         }
+        */
+
+        /* TESTE 02
+        for (DadosCinemaEndereco item : Relatorio.listarCinemaEndereco()) {
+            System.out.println(item);
+            MenuFormatter.linha();
+        }
+        */
+
+        /* TESTE 03
+        for (DadosInformacaoSessoes item : Relatorio.listarInfoSessoes()) {
+            System.out.println(item);
+            MenuFormatter.linha();
+        }
+        */
     }
 }

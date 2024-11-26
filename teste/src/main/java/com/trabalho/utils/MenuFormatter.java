@@ -72,52 +72,7 @@ public class MenuFormatter {
 		}
 		
 		return strEspacamento + texto + strEspacamento;
-	}
-	
-    public static String criarLinhaTabela (String[] valores) {
-        String corpo = "";
-
-        for (int c = 0; c < valores.length; c++) {
-            corpo += MenuFormatter.centralizarItem(valores[c]);
-        }
-        
-        return corpo;
     }
-
-    public static String criarLinhaTabela (String[] valores, int tamanho) {
-        String corpo = "";
-
-        for (int c = 0; c < valores.length; c++) {
-            if (c == 0) {
-                corpo += MenuFormatter.centralizarItem(valores[c], tamanho-2);
-            } else {
-                corpo += MenuFormatter.centralizarItem(valores[c], tamanho);
-            }
-        }
-
-        return corpo;
-    }
-
-    public static String criaTabelaCompleta(String[] colunas, String[] valores) {
-        String tabela = "";
-        tabela += MenuFormatter.criarLinhaTabela(colunas, numEspacamentoUni-2) 
-                + "\n" + MenuFormatter.getLinha("--")
-                + "\n" + MenuFormatter.criarLinhaTabela(valores, numEspacamentoUni-2);
-        return tabela;
-    }
-
-    public static String criaTabelaCompleta(String[] colunas, String[] linhas, int tamanho) {
-        String tabela = "";
-        tabela += MenuFormatter.criarLinhaTabela(colunas, tamanho) 
-                + "\n" + MenuFormatter.getLinha("--");
-
-        for (int i = 0; i < linhas.length; i ++) {
-            tabela += "\n" + linhas[i];
-        }
-        
-        return tabela;
-    }
-
     
     public static void limparTerminal() throws IOException, InterruptedException {
         //Limpa a tela no windows, no linux e no MacOS
