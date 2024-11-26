@@ -1,11 +1,8 @@
 package com.trabalho.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
-
-import java.io.File;
 import java.io.IOException;
+import java.io.File;
 
 public class Arquivo {
     private static final boolean LOG = false;
@@ -28,21 +25,6 @@ public class Arquivo {
             MenuFormatter.msgTerminalERROR("Erro ao ler o arquivo JSON: " + e.getMessage());
             return null;
         }
-    }
-
-    // Método para buscar documentos de uma coleção MongoDB e retornar como uma String
-    public static String lerMongoDB(MongoCollection<Document> collection) {
-        StringBuilder resultado = new StringBuilder();
-
-        try {
-            for (Document doc : collection.find()) {
-                resultado.append(doc.toJson()).append("\n");
-            }
-        } catch (Exception e) {
-            return null;
-        }
-
-        return resultado.toString();
     }
 
     public static boolean isLog() {

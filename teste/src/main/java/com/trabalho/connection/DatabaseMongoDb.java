@@ -10,7 +10,13 @@ public class DatabaseMongoDb {
     private static final String NOME_DATABASE = "cinema_mongo_db";
     private static final String URL_MONGODB = "mongodb://localhost:27017/";
     
-    private static final String[] COLLETIONS_NAMES = { "endereco", "cinema", "filme", "sessao", "venda" }; 
+    private static final String[] COLLETIONS_NAMES = { 
+        "endereco", "cinema", 
+        "filme", "sessao", 
+        "venda", "cliente", 
+        "cliente_vip" 
+    }; 
+    
     private static final String ARQ_INSERT = "insert_documents.json";
     private static final String NOME_PASTA_JSON = "json";
     private static final String CAMINHO_PASTA_JSON = Arquivo.procuraPasta(NOME_PASTA_JSON);
@@ -125,11 +131,34 @@ public class DatabaseMongoDb {
             if (((int) vendas.countDocuments()) <= 0) {
                 for (Venda venda : dados.getVenda()) {
                     Document doc = new Document("id_venda", venda.getIdVenda())
-                            .append("nome_cliente", venda.getNomeCliente())
+                            .append("id_cliente", venda.getCliente().getIdCliente())
                             .append("assento", venda.getAssento())
                             .append("forma_pagamento", venda.getFormaPagamento())
                             .append("id_sessao", venda.getSessao().getIdSessao());
                     vendas.insertOne(doc);
+                }
+            }
+
+            // Insere cliente
+            MongoCollection<Document> clientes = database.getCollection(COLLETIONS_NAMES[5]);
+            if (((int) clientes.countDocuments()) <= 0) {
+                for (Cliente cliente : dados.getCliente()) {
+                    Document doc = new Document("id_cliente", cliente.getIdCliente())
+                            .append("nome_cliente", cliente.getNomeCliente())
+                            .append("cpf", cliente.getCpf())
+                            .append("email", cliente.getEmail());
+                    clientes.insertOne(doc);
+                }
+            }
+
+            // Insere ClientesVip
+            MongoCollection<Document> clientesVip = database.getCollection(COLLETIONS_NAMES[6]);
+            if (((int) clientesVip.countDocuments()) <= 0) {
+                for (ClienteVip clienteVip : dados.getClienteVip()) {
+                    Document doc = new Document("id_cliente", clienteVip.getIdCliente())
+                            .append("desconto", clienteVip.getDesconto())
+                            .append("acesso_prioritario", clienteVip.isAcessoPrioritario());
+                    clientesVip.insertOne(doc);
                 }
             }
 

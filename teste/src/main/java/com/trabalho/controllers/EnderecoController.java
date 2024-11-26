@@ -68,13 +68,13 @@ public class EnderecoController extends ControllerBase implements IControllerBas
     }
 
     @Override
-    public Endereco buscarRegistroPorId(int idEnderecoPesquisa) {
+    public Endereco buscarRegistroPorId(int idPesquisa) {
         try {
-            Document result = enderecoCollection.find(Filters.eq("id_endereco", idEnderecoPesquisa))
+            Document result = enderecoCollection.find(Filters.eq("id_endereco", idPesquisa))
                     .first();
 
             if (result != null) {
-                return new Endereco(idEnderecoPesquisa,
+                return new Endereco(idPesquisa,
                         result.getInteger("numero"),
                         result.getString("rua"),
                         result.getString("bairro"),

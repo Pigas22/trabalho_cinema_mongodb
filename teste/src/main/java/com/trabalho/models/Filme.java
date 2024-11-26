@@ -40,7 +40,7 @@ public class Filme {
     }
 
     public String toString() {
-        return "Filema [" + "\n" + 
+        return "Filme [" + "\n" + 
                "    idFilme = " + idFilme + ",\n" +  
                "    nomeFilme = " + nomeFilme + ",\n" + 
                "    preco = " + preco + "\n" + 

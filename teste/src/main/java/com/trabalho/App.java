@@ -26,7 +26,7 @@ public class App {
 
         if (opcaoConfig == 1) {
             DatabaseMongoDb.droparDatabase();
-            DatabaseMongoDb.criarDatabase();
+            DatabaseMongoDb.criarDatabaseCollections();
             DatabaseMongoDb.inicializarDatabase();
     
             MenuFormatter.delay(2);

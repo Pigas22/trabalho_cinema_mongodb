@@ -3,97 +3,74 @@ package com.trabalho.controllers;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
-import com.trabalho.connection.DatabaseMongoDb;
 
-import com.trabalho.connection.*;
+import com.trabalho.controllers.base.*;
 import com.trabalho.models.*;
 import com.trabalho.utils.*;
 
 import java.util.LinkedList;
 
-public class FilmeController implements ControllerBase<Filme> {
-    private static final MongoCollection<Document> filmesCollection = DatabaseMongoDb.conectar().getCollection("filmes");
+public class FilmeController extends ControllerBase implements IControllerBase<Filme> {
+    private MongoCollection<Document> filmeCollection = null;
 
-    public static boolean inserirRegistro(Filme filme) {
-        try {
-            Document document = new Document("nome_filme", filme.getNomeFilme())
-                    .append("preco", filme.getPreco());
-            filmesCollection.insertOne(document);
-            return true;
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
+    public FilmeController() {
+        super("filme");
+        this.filmeCollection = super.getColecao();
     }
 
-    public static boolean excluirRegistro(int idFilme) {
+    @Override
+    public boolean inserirRegistro(Filme filme) {
         try {
-            Document result = filmesCollection.findOneAndDelete(Filters.eq("id_filme", idFilme));
-            if (result != null) {
+            int id = super.getMaiorId();
+
+            if (id != -999 && id != -500) {
+                Document doc = new Document("id_filme", id+1)
+                        .append("nome_filme", filme.getNomeFilme())
+                        .append("preco", filme.getPreco());
+    
+                filmeCollection.insertOne(doc);
                 return true;
+
             } else {
-                MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
                 return false;
             }
+
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
         }
     }
 
-    public static boolean excluirTodosRegistros() {
+    @Override
+    public boolean atualizarRegistro(int idRegistro, Filme filme) {
         try {
-            filmesCollection.deleteMany(new Document());
-            return true;
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
-    }
-
-    public static boolean atualizarRegistro(int idFilme, String nomeFilme, double preco) {
-        try {
-            Document updateDoc = new Document("nome_filme", nomeFilme)
-                    .append("preco", preco);
-            Document result = filmesCollection.findOneAndUpdate(
-                    Filters.eq("id_filme", idFilme),
-                    new Document("$set", updateDoc));
-            if (result != null) {
+            if (this.existeRegistro(idRegistro)) {
+                Document filtroId = new Document("id_filme", idRegistro);
+                Document atualizacao = new Document("$set", new Document("nome_filme", filme.getNomeFilme())
+                            .append("preco", filme.getPreco()));
+                
+                filmeCollection.updateOne(filtroId, atualizacao);
                 return true;
-            } else {
-                MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
-                return false;
+
             }
+            return false;
+
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
         }
     }
 
-    public static boolean atualizarRegistro(Filme filme) {
+    @Override
+    public Filme buscarRegistroPorId(int idPesquisa) {
         try {
-            Document updateDoc = new Document("nome_filme", filme.getNomeFilme())
-                    .append("preco", filme.getPreco());
-            Document result = filmesCollection.findOneAndUpdate(
-                    Filters.eq("id_filme", filme.getIdFilme()),
-                    new Document("$set", updateDoc));
+            Document result = filmeCollection.find(Filters.eq("id_filme", idPesquisa))
+                    .first();
+
             if (result != null) {
-                return true;
-            } else {
-                MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
-                return false;
-            }
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
-    }
-
-    public static Filme buscarRegistroPorId(int idFilmePesquisa) {
-        try {
-            Document doc = filmesCollection.find(Filters.eq("id_filme", idFilmePesquisa)).first();
-            if (doc != null) {
-                return new Filme(doc.getInteger("id_filme"), doc.getString("nome_filme"), doc.getDouble("preco"));
+                return new Filme(idPesquisa,
+                        result.getString("nome_filme"),
+                        result.getDouble("preco"));
             } else {
                 MenuFormatter.msgTerminalERROR("Não encontrado nenhum registro com o ID informado.");
                 return null;
@@ -104,50 +81,46 @@ public class FilmeController implements ControllerBase<Filme> {
         }
     }
 
-    public static LinkedList<Filme> listarTodosRegistros() {
-        LinkedList<Filme> listaResgistros = new LinkedList<>();
+    @Override
+    public LinkedList<Filme> listarTodosRegistros() {
+        LinkedList<Filme> listaRegistros = new LinkedList<>();
         try {
-            MongoCursor<Document> cursor = filmesCollection.find().iterator();
+            MongoCursor<Document> cursor = filmeCollection.find().iterator();
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
-                listaResgistros.add(new Filme(doc.getInteger("id_filme"), doc.getString("nome_filme"), doc.getDouble("preco")));
+                listaRegistros.add(new Filme(doc.getInteger("id_filme"),
+                        doc.getString("nome_filme"),
+                        doc.getDouble("preco")));
             }
-            return listaResgistros;
+            return listaRegistros;
+
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return null;
         }
     }
 
-    public static int contarRegistros() {
-        try {
-            return (int) filmesCollection.countDocuments();
-        } catch (Exception e) {
-            return -999;
+    public static void main(String[] args) {
+        FilmeController filmeController = new FilmeController();
+        filmeController.inserirRegistro(new Filme("Filme Teste", 15.78));
+        
+        MenuFormatter.linha();
+        System.out.println(filmeController.buscarRegistroPorId(1));
+        MenuFormatter.linha();
+        filmeController.atualizarRegistro(1, new Filme("Deadpool e Wolverine", 20.60));
+       
+        MenuFormatter.linha();
+        for (Filme testfilme : filmeController.listarTodosRegistros()) {
+            System.out.println(testfilme);
+            MenuFormatter.linha();
         }
-    }
-
-    public static boolean existeRegistro(int idFilme) {
-        try {
-            Document doc = filmesCollection.find(Filters.eq("id_filme", idFilme)).first();
-            return doc != null;
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
-    }
-
-    private static int getMaiorId() {
-        try {
-            Document doc = filmesCollection.find().sort(new Document("id_filme", -1)).first();
-            if (doc != null) {
-                return doc.getInteger("id_filme");
-            } else {
-                return -500;
-            }
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return -999;
-        }
+    
+        System.out.println("Número de Registros: " + filmeController.contarRegistros());
+        System.out.println("Maior Id: " + filmeController.getMaiorId());
+        System.out.println("Registro 7 existe: " + filmeController.existeRegistro(2));
+        System.out.println("Registro 7 foi excluído: " +filmeController.excluirRegistro(2));
+        System.out.println("Registro 7 existe: " +filmeController.existeRegistro(2));
+        System.out.println("Todos os registros foram excluídos: " +filmeController.excluirTodosRegistros());
+        
     }
 }

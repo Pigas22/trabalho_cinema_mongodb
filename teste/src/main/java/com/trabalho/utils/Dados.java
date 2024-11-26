@@ -2,6 +2,7 @@ package com.trabalho.utils;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.trabalho.models.*;
 
 public class Dados {
@@ -10,6 +11,10 @@ public class Dados {
     private List<Filme> filme;
     private List<Sessao> sessao;
     private List<Venda> venda;
+    private List<Cliente> cliente;
+
+    @JsonProperty("cliente_vip")
+    private List<ClienteVip> clienteVip;
 
     // Getters e Setters
     public List<Endereco> getEndereco() {
@@ -46,4 +51,18 @@ public class Dados {
     public void setVenda(List<Venda> venda) {
         this.venda = venda;
     }
+    
+    public List<Cliente> getCliente() {
+        return cliente;
+    }
+    public void setCliente(List<Cliente> cliente) {
+        this.cliente = cliente;
+    }
+
+    public List<ClienteVip> getClienteVip() {
+        return clienteVip;
+    }
+    public void setClienteVip(List<ClienteVip> clienteVip) {
+        this.clienteVip = clienteVip;
+    } 
 }

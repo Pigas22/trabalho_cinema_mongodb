@@ -1,51 +1,41 @@
 package com.trabalho.controllers;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
-import com.trabalho.connection.DatabaseMongoDb;
+import com.trabalho.controllers.base.*;
 import com.trabalho.models.*;
 import com.trabalho.utils.*;
 
 import java.util.LinkedList;
-import java.util.List;
 
-public class CinemaController implements ControllerBase<Cinema> {
-    private static MongoCollection<Document> cinemaCollection = DatabaseMongoDb.conectar().getCollection("cinemas");
+public class CinemaController extends ControllerBase implements IControllerBase<Cinema> {
+    private MongoCollection<Document> cinemaCollection = null;
 
-    @Override
-    public static boolean inserirRegistro(Cinema cinema) {
-        try {
-            MongoCollection<Document> collection = getCollection();
-           
-            // Prepare the document for insertion
-            Document doc = new Document("id_cinema", getMaiorId() + 1)
-                    .append("nome_cinema", cinema.getNomeCinema())
-                    .append("id_endereco", cinema.getEndereco().getIdEndereco());
-
-            collection.insertOne(doc);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Erro ao inserir cinema: " + e.getMessage());
-            return false;
-        }
+    public CinemaController() {
+        super("cinema");
+        this.cinemaCollection = super.getColecao();
     }
 
     @Override
-    public static boolean excluirRegistro(int idCinema) {
+    public boolean inserirRegistro(Cinema cinema) {
         try {
-            MongoCollection<Document> collection = getCollection();
-            Document filter = new Document("id_cinema", idCinema);
-            long deletedCount = collection.deleteOne(filter).getDeletedCount();
+            int id = super.getMaiorId();
 
-            if (deletedCount > 0) {
+            if (id != -999 && id != -500) {
+                Document doc = new Document("id_cinema", id+1)
+                        .append("nome_cinema", cinema.getNomeCinema())
+                        .append("id_endereco", cinema.getEndereco().getIdEndereco());
+    
+                cinemaCollection.insertOne(doc);
                 return true;
+
             } else {
-                MenuFormatter.msgTerminalERROR("Cinema não encontrado no Banco de Dados.");
                 return false;
             }
+
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
@@ -53,14 +43,19 @@ public class CinemaController implements ControllerBase<Cinema> {
     }
 
     @Override
-    public static boolean atualizarRegistro(int idCinema, String nome, int idEndereco) {
+    public boolean atualizarRegistro(int idRegistro, Cinema cinema) {
         try {
-            MongoCollection<Document> collection = getCollection();
-            Document filter = new Document("id_cinema", idCinema);
-            Document update = new Document("$set", new Document("nome_cinema", nome).append("id_endereco", idEndereco));
+            if (this.existeRegistro(idRegistro)) {
+                Document filtroId = new Document("id_cinema", idRegistro);
+                Document atualizacao = new Document("$set", new Document("nome_cinema", cinema.getNomeCinema())
+                            .append("id_endereco", cinema.getEndereco().getIdEndereco()));
+                
+                cinemaCollection.updateOne(filtroId, atualizacao);
+                return true;
 
-            long updatedCount = collection.updateOne(filter, update).getModifiedCount();
-            return updatedCount > 0;
+            }
+            return false;
+
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
@@ -68,22 +63,16 @@ public class CinemaController implements ControllerBase<Cinema> {
     }
 
     @Override
-    public static boolean atualizarRegistro(Cinema cinema) {
-        return atualizarRegistro(cinema.getIdCinema(), cinema.getNomeCinema(), cinema.getEndereco().getIdEndereco());
-    }
-
-    @Override
-    public static Cinema buscarRegistroPorId(int idCinemaPesquisa) {
+    public Cinema buscarRegistroPorId(int idPesquisa) {
+        EnderecoController enderecoController = new EnderecoController();
         try {
-            MongoCollection<Document> collection = getCollection();
-            Document filter = new Document("id_cinema", idCinemaPesquisa);
-            Document doc = collection.find(filter).first();
+            Document result = cinemaCollection.find(Filters.eq("id_cinema", idPesquisa))
+                    .first();
 
-            if (doc != null) {
-                int idCinema = doc.getInteger("id_cinema");
-                String nome = doc.getString("nome_cinema");
-                int idEndereco = doc.getInteger("id_endereco");
-                return new Cinema(idCinema, nome, EnderecoController.buscarRegistroPorId(idEndereco));
+            if (result != null) {
+                return new Cinema(idPesquisa,
+                        result.getString("nome_cinema"),
+                        enderecoController.buscarRegistroPorId(result.getInteger("id_endereco")));
             } else {
                 MenuFormatter.msgTerminalERROR("Não encontrado nenhum registro com o ID informado.");
                 return null;
@@ -95,61 +84,53 @@ public class CinemaController implements ControllerBase<Cinema> {
     }
 
     @Override
-    public static LinkedList<Cinema> listarTodosRegistros() {
-        LinkedList<Cinema> listaCinemas = new LinkedList<>();
+    public LinkedList<Cinema> listarTodosRegistros() {
+        LinkedList<Cinema> listaRegistros = new LinkedList<>();
+        EnderecoController enderecoController = new EnderecoController();
+
         try {
-            MongoCollection<Document> collection = getCollection();
-            for (Document doc : collection.find()) {
-                int idCinema = doc.getInteger("id_cinema");
-                String nome = doc.getString("nome_cinema");
-                int idEndereco = doc.getInteger("id_endereco");
-                listaCinemas.add(new Cinema(idCinema, nome, EnderecoController.buscarRegistroPorId(idEndereco)));
+            MongoCursor<Document> cursor = cinemaCollection.find().iterator();
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                listaRegistros.add(new Cinema(doc.getInteger("id_cinema"),
+                        doc.getString("nome_cinema"),
+                        enderecoController.buscarRegistroPorId(doc.getInteger("id_endereco"))));
             }
+            return listaRegistros;
+
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
-        }
-        return listaCinemas;
-    }
-
-    @Override
-    public static boolean existeRegistro(int idCinema) {
-        try {
-            MongoCollection<Document> collection = getCollection();
-            Document filter = new Document("id_cinema", idCinema);
-            long count = collection.countDocuments(filter);
-
-            return count > 0;
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
+            return null;
         }
     }
 
-    @Override
-    private static int getMaiorId() {
-        try {
-            MongoCollection<Document> collection = getCollection();
-            Document maxIdDoc = collection.aggregate(
-                    List.of(new Document("$sort", new Document("id_cinema", -1)),
-                            new Document("$limit", 1),
-                            new Document("$project", new Document("id_cinema", 1)))
-            ).first();
-           
-            return maxIdDoc != null ? maxIdDoc.getInteger("id_cinema") : 0;
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return -999;
-        }
-    }
+    public static void main(String[] args) {
+        CinemaController cinemaController = new CinemaController();
+        EnderecoController enderecoController = new EnderecoController();
 
-    @Override
-    public static int contarRegistros() {
-        try {
-            MongoCollection<Document> collection = getCollection();
-            return (int) collection.countDocuments();
-        } catch (Exception e) {
-            return -999;
+        cinemaController.inserirRegistro(new Cinema("Teste Cinema", enderecoController.buscarRegistroPorId(1)));
+        MenuFormatter.linha();
+        MenuFormatter.linha();
+        cinemaController.buscarRegistroPorId(7);
+        MenuFormatter.linha();
+        cinemaController.atualizarRegistro(2, new Cinema("Teste Cinema 2", enderecoController.buscarRegistroPorId(3)));
+        MenuFormatter.linha();
+        cinemaController.buscarRegistroPorId(7);
+       
+        MenuFormatter.linha();
+        for (Cinema testeCinema : cinemaController.listarTodosRegistros()) {
+            System.out.println(testeCinema);
+            MenuFormatter.linha();
         }
+        
+        System.out.println("Número de Registros: " + cinemaController.contarRegistros());
+        System.out.println("Maior Id: " + cinemaController.getMaiorId());
+       
+        
+        System.out.println("Registro 7 existe: " + cinemaController.existeRegistro(7));
+        System.out.println("Registro 7 foi excluído: " +cinemaController.excluirRegistro(7));
+        System.out.println("Registro 7 existe: " +cinemaController.existeRegistro(7));
+        System.out.println("Todos os registros foram excluídos: " +cinemaController.excluirTodosRegistros());
     }
 }
 

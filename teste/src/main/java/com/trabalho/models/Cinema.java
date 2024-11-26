@@ -49,7 +49,7 @@ public class Cinema{
         return "Cinema [" + "\n" + 
             "   idCinema = " + idCinema + ",\n" + 
             "   nomeCinema = " + nomeCinema + ",\n" + 
-            "   endereco = " + endereco + "\n" + 
+            "   idEndereco = " + endereco.getIdEndereco() + "\n" + 
             "]";
     }
 

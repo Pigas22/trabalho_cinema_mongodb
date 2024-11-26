@@ -1,12 +1,27 @@
 package com.trabalho.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ClienteVip extends Cliente {
-    private double desconto;  // Porcentagem de desconto
+    private double desconto;
     private boolean acessoPrioritario;
 
-    // Construtor da classe ClienteVIP com desconto
-    public ClienteVip(String nome, String cpf, String email, int idCliente, double desconto, boolean acessoPrioritario) {
-        super(nome, cpf, email, idCliente);  // Chama o construtor da classe pai (Cliente)
+    public ClienteVip () {}
+
+    public ClienteVip(int idCliente, String nomeCliente, String cpf, String email, double desconto, boolean acessoPrioritario) {
+        super(idCliente, nomeCliente, cpf, email);
+        this.desconto = desconto;
+        this.acessoPrioritario = acessoPrioritario;
+    }
+
+    public ClienteVip(String nomeCliente, String cpf, String email, double desconto, boolean acessoPrioritario) {
+        super(nomeCliente, cpf, email);
+        this.desconto = desconto;
+        this.acessoPrioritario = acessoPrioritario;
+    }
+
+    public ClienteVip(Cliente cliente, double desconto, boolean acessoPrioritario) {
+        super(cliente.getIdCliente(), cliente.getNomeCliente(), cliente.getCpf(), cliente.getCpf());
         this.desconto = desconto;
         this.acessoPrioritario = acessoPrioritario;
     }
@@ -31,5 +46,10 @@ public class ClienteVip extends Cliente {
     // Método para calcular o valor com desconto
     public double calcularDesconto(double valorCompra) {
         return valorCompra - (valorCompra * (desconto / 100));
+    }
+
+    @JsonProperty("idCliente")
+    public void setClienteById(int idCliente) {
+        this.setIdClente(idCliente);
     }
 }

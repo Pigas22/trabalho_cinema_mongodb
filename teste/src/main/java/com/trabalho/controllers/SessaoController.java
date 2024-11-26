@@ -1,286 +1,157 @@
 package com.trabalho.controllers;
 
 import com.mongodb.client.MongoCollection;
-import com.trabalho.connection.DatabaseMongoDb;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.MongoCursor;
 
-import com.trabalho.connection.*;
+import com.trabalho.controllers.base.*;
 import com.trabalho.models.*;
 import com.trabalho.utils.*;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import java.util.LinkedList;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import org.bson.Document;
 
-public class SessaoController implements ControllerBase<Sessao> {
-    private static MongoCollection<Document> sessoesCollection = DatabaseMongoDb.conectar().getCollection("sessoes");
+public class SessaoController extends ControllerBase implements IControllerBase<Sessao> {
+    private MongoCollection<Document> sessaoCollection = null;
+
+    public SessaoController() {
+        super("sessao");
+        this.sessaoCollection = super.getColecao();
+    }
+
+    @Override
+    public boolean inserirRegistro(Sessao sessao) {
+        try {
+            int id = super.getMaiorId();
+
+            if (id != -999 && id != -500) {
+                Document doc = new Document("id_sessao", id+1)
+                        .append("horario", sessao.getHorario())
+                        .append("id_cinema", sessao.getCinema().getIdCinema())
+                        .append("id_filme", sessao.getFilme().getIdFilme())
+                        .append("qtd_assentos", sessao.getQtdAssentos());
     
-    public static boolean inserirRegistro (Sessao sessao) {
-        String sql = "INSERT INTO sessao (id_sessao, horario, id_cinema, id_filme, qtd_assentos) VALUES (?, ?, ?, ?, ?);";
+                sessaoCollection.insertOne(doc);
+                return true;
 
-        try (Connection conn = Database.conectar();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            int idSessao = SessaoController.getMaiorId();
-            if (idSessao == -500) {
-                idSessao = 0;
-
-            } else if (idSessao == -999) {
+            } else {
                 return false;
             }
-            
-            pstmt.setInt(1, idSessao+1);
-            pstmt.setTimestamp(2, sessao.getHorario());
-            pstmt.setInt(3, sessao.getCinema().getIdCinema());
-            pstmt.setInt(4, sessao.getFilme().getIdFilme());
-            pstmt.setInt(5, sessao.getQtdAssentos());
 
-            pstmt.executeUpdate();
-
-            return true;
-            
-        } catch (SQLException e) {
+        } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
         }
     }
-    
-    public static boolean excluirRegistro (int idSessao) {
-        String sql = "DELETE FROM sessao WHERE id_sessao = ?;";
 
-        if (SessaoController.existeRegistro(idSessao)) {
-            try (Connection conn = Database.conectar();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-                pstmt.setInt(1, idSessao);
-                pstmt.executeUpdate();
-
+    @Override
+    public boolean atualizarRegistro(int idRegistro, Sessao sessao) {
+        try {
+            if (this.existeRegistro(idRegistro)) {
+                Document filtroId = new Document("id_sessao", idRegistro);
+                Document atualizacao = new Document("$set", new Document("horario", sessao.getHorario())
+                            .append("id_cinema", sessao.getCinema().getIdCinema())
+                            .append("id_filme", sessao.getFilme().getIdFilme())
+                            .append("qtd_assentos", sessao.getQtdAssentos()));
+                
+                sessaoCollection.updateOne(filtroId, atualizacao);
                 return true;
 
-            } catch (SQLException e) {
-                MenuFormatter.msgTerminalERROR(e.getMessage());
-                return false;
             }
-            
-        } else {
-            MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
+            return false;
+
+        } catch (Exception e) {
+            MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
         }
     }
 
-    public static boolean excluirTodosRegistros () {
-        try (Connection conn = Database.conectar();
-            Statement stmt = conn.createStatement()) {
+    @Override
+    public Sessao buscarRegistroPorId(int idPesquisa) {
+        FilmeController filmeController = new FilmeController();
+        CinemaController cinemaController = new CinemaController();
 
-                String sql = "DELETE FROM sessao;";
-                stmt.executeUpdate(sql);
+        try {
+            Document result = sessaoCollection.find(Filters.eq("id_sessao", idPesquisa))
+                    .first();
 
-                return true;
-                
-
-            } catch (SQLException e) {
-                MenuFormatter.msgTerminalERROR(e.getMessage());
-                return false;
-            }
-    }
-
-    public static boolean atualizarRegistro (int idSessao, Timestamp horario, int idCinema, int idFilme, int qtdAssentos) {
-        String sql = "UPDATE sessao SET horario = ?, id_cinema = ?, id_filme = ?, qtd_assentos = ? WHERE id_sessao = ?;";
-
-        if (FilmeController.existeRegistro(idFilme)) {
-            try (Connection conn = Database.conectar();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-                pstmt.setTimestamp(1, horario);
-                pstmt.setInt(2, idCinema);
-                pstmt.setInt(3, idFilme);
-                pstmt.setInt(4, qtdAssentos);
-                pstmt.setInt(5, idSessao);
-
-            pstmt.executeUpdate();
-
-            return true;
-            
-            } catch (SQLException e) {
-                MenuFormatter.msgTerminalERROR(e.getMessage());
-                return false;
-            }
-            
-        } else {
-            MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
-            return false;
-        }
-    }
-
-    public static boolean atualizarRegistro (Sessao sessao) {
-        String sql = "UPDATE sessao SET horario = ?, id_cinema = ?, id_filme = ?, qtd_assentos = ? WHERE id_sessao = ?;";
-
-        if (FilmeController.existeRegistro(sessao.getIdSessao())) {
-            try (Connection conn = Database.conectar();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-                pstmt.setTimestamp(1, sessao.getHorario());
-                pstmt.setInt(2, sessao.getCinema().getIdCinema());
-                pstmt.setInt(3, sessao.getFilme().getIdFilme());
-                pstmt.setInt(4, sessao.getQtdAssentos());
-                pstmt.setInt(5, sessao.getIdSessao());
-
-            pstmt.executeUpdate();
-
-            return true;
-            
-            } catch (SQLException e) {
-                MenuFormatter.msgTerminalERROR(e.getMessage());
-                return false;
-            }
-            
-        } else {
-            MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
-            return false;
-        }
-    }
-   
-    public static Sessao buscarRegistroPorId (int idSessaoPesquisa) {
-        if (SessaoController.existeRegistro(idSessaoPesquisa)) {
-            String sql = "SELECT * FROM sessao WHERE id_sessao = ?";
-    
-            // Inicialização com valores irreais
-            int idSessao = -500, idCinema  = -500, idFilme = -500, qtdAssentos = -500;
-            Timestamp horairo = null;
-    
-            try (Connection conn = Database.conectar();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-    
-                pstmt.setInt(1, idSessaoPesquisa);
-    
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    idSessao = rs.getInt("id_sassao");
-                    horairo = rs.getTimestamp("horario");
-                    idCinema = rs.getInt("id_cinema");
-                    idFilme = rs.getInt("id_filme");
-                    qtdAssentos = rs.getInt("qtd_assentos");
-                }
-
-                Cinema cinema = CinemaController.buscarRegistroPorId(idCinema);
-                Filme filme = FilmeController.buscarRegistroPorId(idFilme);
-                
-                return new Sessao(idSessao, horairo, cinema, filme, qtdAssentos);
-    
-            } catch (SQLException e) {
-                MenuFormatter.msgTerminalERROR(e.getMessage());
+            if (result != null) {
+                Timestamp horario = new Timestamp(result.getDate("horario").getTime());
+                return new Sessao(idPesquisa,
+                        horario,
+                        cinemaController.buscarRegistroPorId(result.getInteger("id_cinema")),
+                        filmeController.buscarRegistroPorId(result.getInteger("id_filme")),
+                        result.getInteger("qtd_assentos"));
+            } else {
+                MenuFormatter.msgTerminalERROR("Não encontrado nenhum registro com o ID informado.");
                 return null;
             }
-
-        } else {
-            MenuFormatter.msgTerminalERROR("Não encontrado nenhum resgistro com o ID informado.");
-            return null;
-        }
-
-    }
-
-    public static LinkedList<Sessao> listarTodosRegistros () {
-        LinkedList<Sessao> listaResgistros = new LinkedList<Sessao>();
-        String sql = "SELECT * FROM sessao ORDER BY id_sessao ASC";
-
-        int idSessao, idCinema, idFilme, qtdAssentos;
-        Timestamp horairo;
-        Cinema cinema;
-        Filme filme;
-
-        try (Connection conn = Database.conectar();
-            Statement stmt = conn.createStatement()) {
-
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                idSessao = rs.getInt("id_sessao");
-                horairo = rs.getTimestamp("horario");
-                idCinema = rs.getInt("id_cinema");
-                idFilme = rs.getInt("id_filme");
-                qtdAssentos = rs.getInt("qtd_assentos");
-
-                cinema = CinemaController.buscarRegistroPorId(idCinema);
-                filme = FilmeController.buscarRegistroPorId(idFilme);
-
-                listaResgistros.add(new Sessao(idSessao, horairo, cinema, filme, qtdAssentos));
-            }
-
-            return listaResgistros;
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return null;
         }
     }
+
+    @Override
+    public LinkedList<Sessao> listarTodosRegistros() {
+        LinkedList<Sessao> listaRegistros = new LinkedList<>();
+        FilmeController filmeController = new FilmeController();
+        CinemaController cinemaController = new CinemaController();
+
+        Timestamp horario;
+        try {
+            MongoCursor<Document> cursor = sessaoCollection.find().iterator();
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                horario = new Timestamp(doc.getDate("horario").getTime());
+                listaRegistros.add(new Sessao(doc.getInteger("id_sessao"),
+                        horario,
+                        cinemaController.buscarRegistroPorId(doc.getInteger("id_cinema")),
+                        filmeController.buscarRegistroPorId(doc.getInteger("id_filme")),
+                        doc.getInteger("qtd_assentos")));
+            }
+            return listaRegistros;
+
+        } catch (Exception e) {
+            MenuFormatter.msgTerminalERROR(e.getMessage());
+            return null;
+        }
+    }
+
+
+    public static void main(String[] args) {
+        SessaoController sessaoController = new SessaoController();
+        CinemaController cinemaController = new CinemaController();
+        FilmeController filmeController = new FilmeController();
+
+        sessaoController.inserirRegistro(new Sessao(Timestamp.valueOf("2024-10-20 10:20:40"), 
+                            cinemaController.buscarRegistroPorId(3), 
+                            filmeController.buscarRegistroPorId(2), 
+                            32));
+        
+        MenuFormatter.linha();
+        System.out.println(sessaoController.buscarRegistroPorId(1));
+        MenuFormatter.linha();
+        sessaoController.atualizarRegistro(1, new Sessao(Timestamp.valueOf(LocalDateTime.now()), 
+                                cinemaController.buscarRegistroPorId(3), 
+                                filmeController.buscarRegistroPorId(2), 
+                    32));
+       
+        MenuFormatter.linha();
+        for (Sessao testSessao : sessaoController.listarTodosRegistros()) {
+            System.out.println(testSessao);
+            MenuFormatter.linha();
+        }
     
-    public static int contarRegistros () {
-        try (Connection conn = Database.conectar();
-            Statement stmt = conn.createStatement()) {
-            
-            int qtdSessao = 0;
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(id_sessao) AS resultado FROM sessao;");
-            
-            while (rs.next()) {
-                qtdSessao = rs.getInt("resultado");
-            }
-
-            return qtdSessao;
-
-        } catch (SQLException e) {
-            return -999;
-        }
-    }
-
-    public static boolean existeRegistro (int idSessao) {
-        String sql = "SELECT COUNT(id_sessao) AS resultado FROM sessao WHERE id_sessao = ?;";
-        int qtdSessao = 0;
-
-        try (Connection conn = Database.conectar();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1, idSessao);
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                qtdSessao = rs.getInt("resultado");
-            }
-
-            if (qtdSessao == 0) {
-                return false;
-                
-            } else {
-                return true;
-            }
-
-        } catch (SQLException e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
-    }
-
-    private static int getMaiorId() {
-        String sql = "SELECT id_sessao AS resultado FROM sessao ORDER BY id_sessao DESC LIMIT 1;";
-        int ultimoId = -500;
-
-        try (Connection conn = Database.conectar();
-            Statement pstmt = conn.createStatement()) {
-
-            ResultSet rs = pstmt.executeQuery(sql);
-            while (rs.next()) {
-                ultimoId = rs.getInt("resultado");
-            }
-
-            return ultimoId;
-
-        } catch (SQLException e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return -999;
-        }
+        System.out.println("Número de Registros: " + sessaoController.contarRegistros());
+        System.out.println("Maior Id: " + sessaoController.getMaiorId());
+        System.out.println("Registro 7 existe: " + sessaoController.existeRegistro(2));
+        System.out.println("Registro 7 foi excluído: " +sessaoController.excluirRegistro(2));
+        System.out.println("Registro 7 existe: " +sessaoController.existeRegistro(2));
+        System.out.println("Todos os registros foram excluídos: " +sessaoController.excluirTodosRegistros());
+        
     }
 }

@@ -4,23 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Venda {
     private int idVenda;
-    private String nomeCliente;
+    private Cliente cliente;
     private int assento;
     private String formaPagamento;
     private Sessao sessao;
 
     public Venda() {}
 
-    public Venda(int idVenda, String nomeCliente, int assento, String formaPagamento, Sessao sessao) {
+    public Venda(int idVenda, Cliente cliente, int assento, String formaPagamento, Sessao sessao) {
         this.idVenda = idVenda;
-        this.nomeCliente = nomeCliente;
+        this.cliente = cliente;
         this.assento = assento;
         this.formaPagamento = formaPagamento;
         this.sessao = sessao;
     }
 
-    public Venda(String nomeCliente, int assento, String formaPagamento, Sessao sessao) {
-        this.nomeCliente = nomeCliente;
+    public Venda(Cliente cliente, int assento, String formaPagamento, Sessao sessao) {
+        this.cliente = cliente;
         this.assento = assento;
         this.formaPagamento = formaPagamento;
         this.sessao = sessao;
@@ -33,11 +33,11 @@ public class Venda {
         this.idVenda = idVenda;
     }
 
-    public String getNomeCliente() {
-        return this.nomeCliente;
+    public Cliente getCliente() {
+        return this.cliente;
     }
-    public void setNomeCliente(String nomeCliente) {
-        this.nomeCliente = nomeCliente;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     public int getAssento() {
@@ -64,17 +64,22 @@ public class Venda {
     public String toString() {
         return "Venda [" + "\n" + 
                "    idVenda = " + idVenda + ",\n" +  
-               "    nomeCliente = " + nomeCliente + ",\n" + 
+               "    idCliente = " + cliente.getIdCliente() + ",\n" + 
                "    assento = " + assento + ",\n" + 
                "    formaPagamento = " + formaPagamento + ",\n" + 
                "    idSessao = " + sessao.getIdSessao() + ",\n" + 
                "]";
     }
-    
 
     @JsonProperty("idSessao")
     public void setSessaoById(int idSessao) {
         this.sessao = new Sessao();
         this.sessao.setIdSessao(idSessao);
+    }
+
+    @JsonProperty("idCliente")
+    public void setClienteById(int idCliente) {
+        this.cliente = new Cliente();
+        this.cliente.setIdClente(idCliente);
     }
 }

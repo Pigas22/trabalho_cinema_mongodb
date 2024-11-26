@@ -1,284 +1,151 @@
 package com.trabalho.controllers;
 
 import com.mongodb.client.MongoCollection;
-import com.trabalho.connection.DatabaseMongoDb;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Filters;
 
-import com.trabalho.connection.*;
+import com.trabalho.controllers.base.*;
 import com.trabalho.utils.*;
 import com.trabalho.models.*;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import java.util.LinkedList;
-
 import org.bson.Document;
 
-public class VendaController implements ControllerBase<Venda> {
-    private static MongoCollection<Document> vendaCollection = DatabaseMongoDb.conectar().getCollection("vendas");
+public class VendaController extends ControllerBase implements IControllerBase<Venda> {
+    private MongoCollection<Document> vendaCollection = null;
 
-    public static boolean inserirVenda (Venda venda) {
-        String sql = "INSERT INTO venda (id_venda, nome_cliente, assento, forma_pagamento, id_secao) VALUES (?, ?, ?, ?, ?);";
+    public VendaController() {
+        super("venda");
+        this.vendaCollection = super.getColecao();
+    }
 
-        try (Connection conn = Database.conectar();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    @Override
+    public boolean inserirRegistro(Venda venda) {
+        try {
+            int id = super.getMaiorId();
 
-            int idVenda = VendaController.getMaiorId();
-            if (idVenda == -500) {
-                idVenda = 0;
+            if (id != -999 && id != -500) {
+                Document doc = new Document("id_venda", id+1)
+                        .append("id_cliente", venda.getCliente().getIdCliente())
+                        .append("assento", venda.getAssento())
+                        .append("forma_pagamento", venda.getFormaPagamento())
+                        .append("id_sessao", venda.getSessao().getIdSessao());
+    
+                vendaCollection.insertOne(doc);
+                return true;
 
-            } else if (idVenda == -999) {
+            } else {
                 return false;
             }
-            
-            pstmt.setInt(1, idVenda+1);
-            pstmt.setString(2, venda.getNomeCliente());
-            pstmt.setInt(3, venda.getAssento());
-            pstmt.setString(4, venda.getFormaPagamento());
-            pstmt.setInt(5, venda.getSecao().getIdSecao());
 
-            pstmt.executeUpdate();
-
-            return true;
-            
-        } catch (SQLException e) {
+        } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
         }
     }
-    
-    public static boolean excluirVenda (int idVenda) {
-        String sql = "DELETE FROM venda WHERE id_venda = ?;";
 
-        if (VendaController.existeVenda(idVenda)) {
-            try (Connection conn = Database.conectar();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-                pstmt.setInt(1, idVenda);
-                pstmt.executeUpdate();
-
+    @Override
+    public boolean atualizarRegistro(int idRegistro, Venda venda) {
+        try {
+            if (this.existeRegistro(idRegistro)) {
+                Document filtroId = new Document("id_venda", idRegistro);
+                Document atualizacao = new Document("$set", new Document("id_cliente", venda.getCliente().getIdCliente())
+                            .append("assento", venda.getAssento())
+                            .append("forma_pagamento", venda.getFormaPagamento())
+                            .append("id_sessao", venda.getSessao().getIdSessao()));
+                
+                vendaCollection.updateOne(filtroId, atualizacao);
                 return true;
 
-            } catch (SQLException e) {
-                MenuFormatter.msgTerminalERROR(e.getMessage());
-                return false;
             }
-            
-        } else {
-            MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
+            return false;
+
+        } catch (Exception e) {
+            MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
         }
     }
 
-    public static boolean excluirTodosRegistros () {
-        try (Connection conn = Database.conectar();
-            Statement stmt = conn.createStatement()) {
+    @Override
+    public Venda buscarRegistroPorId(int idPesquisa) {
+        ClienteController clienteController = new ClienteController();
+        SessaoController sessaoController = new SessaoController();
 
-                String sql = "DELETE FROM venda;";
-                stmt.executeUpdate(sql);
+        try {
+            Document result = vendaCollection.find(Filters.eq("id_venda", idPesquisa))
+                    .first();
 
-                return true;
-                
-
-            } catch (SQLException e) {
-                MenuFormatter.msgTerminalERROR(e.getMessage());
-                return false;
-            }
-    }
-
-    public static boolean atualizarVenda (int idVenda, String nomeCliente, int assento, String formaPagamento, Secao secao) {
-        String sql = "UPDATE venda SET nome_cliente = ?, assento = ?, forma_pagamento = ?, id_secao = ? WHERE id_venda = ?;";
-
-        if (VendaController.existeVenda(idVenda)) {
-            try (Connection conn = Database.conectar();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-                pstmt.setString(1, nomeCliente);
-                pstmt.setInt(2, assento);
-                pstmt.setString(3, formaPagamento);
-                pstmt.setInt(4, secao.getIdSecao());
-                pstmt.setInt(5, idVenda);
-
-            pstmt.executeUpdate();
-
-            return true;
-            
-            } catch (SQLException e) {
-                MenuFormatter.msgTerminalERROR(e.getMessage());
-                return false;
-            }
-            
-        } else {
-            MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
-            return false;
-        }
-    }
-
-    public static boolean atualizarVenda (Venda venda) {
-        String sql = "UPDATE venda SET nome_cliente = ?, assento = ?, forma_pagamento = ?, id_secao = ? WHERE id_venda = ?;";
-
-        if (VendaController.existeVenda(venda.getIdVenda())) {
-            try (Connection conn = Database.conectar();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            
-            pstmt.setString(1, venda.getNomeCliente());
-            pstmt.setInt(2, venda.getAssento());
-            pstmt.setString(3, venda.getFormaPagamento());
-            pstmt.setInt(4, venda.getSecao().getIdSecao());
-            pstmt.setInt(5, venda.getIdVenda());
-
-            pstmt.executeUpdate();
-
-            return true;
-            
-            } catch (SQLException e) {
-                MenuFormatter.msgTerminalERROR(e.getMessage());
-                return false;
-            }
-            
-        } else {
-            MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
-            return false;
-        }
-    }
-    
-    public static Venda buscarVendaPorId (int idVendaPesquisa) {
-        if (VendaController.existeVenda(idVendaPesquisa)) {
-            String sql = "SELECT * FROM venda WHERE id_venda = ?";
-    
-            // Inicialização com valores irreais
-            int idVenda = -500, assento = -500, idSecao = -500;
-            String nomeCliente = "N/A", formaPagamento = "N/A";
-            Secao secao = null;
-
-            try (Connection conn = Database.conectar();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-    
-                pstmt.setInt(1, idVendaPesquisa);
-    
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    idVenda = rs.getInt("id_venda");
-                    nomeCliente = rs.getString("nome_cliente");
-                    assento = rs.getInt("assento");
-                    formaPagamento = rs.getString("forma_pagamento");
-                    idSecao = rs.getInt("id_secao");
-    
-                }
-
-                secao = SecaoController.buscarRegistroPorId(idSecao);
-                
-                return new Venda(idVenda, nomeCliente, assento, formaPagamento, secao);
-
-    
-            } catch (SQLException e) {
-                MenuFormatter.msgTerminalERROR(e.getMessage());
+            if (result != null) {
+                return new Venda(idPesquisa,
+                        clienteController.buscarRegistroPorId(result.getInteger("id_cliente")),
+                        result.getInteger("assento"),
+                        result.getString("forma_pagamento"),
+                        sessaoController.buscarRegistroPorId(result.getInteger("id_sessao")));
+            } else {
+                MenuFormatter.msgTerminalERROR("Não encontrado nenhum registro com o ID informado.");
                 return null;
             }
-        } else {
-            MenuFormatter.msgTerminalERROR("Não encontrado nenhum resgistro com o ID informado.");
-            return null;
-        }
-
-    }
-
-    public static LinkedList<Venda> listarTodosRegistros () {
-        LinkedList<Venda> listaResgistros = new LinkedList<Venda>();
-        String sql = "SELECT * FROM venda ORDER BY id_venda ASC";
-
-        int idVenda, assento, idSecao;
-        String nomeCliente, formaPagamento;
-        Secao secao;
-
-        try (Connection conn = Database.conectar();
-            Statement stmt = conn.createStatement()) {
-
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                idVenda = rs.getInt("id_venda");
-                nomeCliente = rs.getString("nome_cliente");
-                assento = rs.getInt("assento");
-                formaPagamento = rs.getString("forma_pagamento");
-                idSecao = rs.getInt("id_secao");
-
-                secao = SecaoController.buscarRegistroPorId(idSecao);
-
-                listaResgistros.add(new Venda(idVenda, nomeCliente, assento, formaPagamento, secao));
-            }
-
-            return listaResgistros;
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return null;
         }
     }
+
+    @Override
+    public LinkedList<Venda> listarTodosRegistros() {
+        ClienteController clienteController = new ClienteController();
+        SessaoController sessaoController = new SessaoController();
+        LinkedList<Venda> listaRegistros = new LinkedList<>();
+
+        try {
+            MongoCursor<Document> cursor = vendaCollection.find().iterator();
+            while (cursor.hasNext()) {
+                Document doc = cursor.next();
+                listaRegistros.add(new Venda(doc.getInteger("id_venda"),
+                        clienteController.buscarRegistroPorId(doc.getInteger("id_cliente")),
+                        doc.getInteger("assento"),
+                        doc.getString("forma_pagamento"),
+                        sessaoController.buscarRegistroPorId(doc.getInteger("id_sessao"))));
+            }
+            return listaRegistros;
+
+        } catch (Exception e) {
+            MenuFormatter.msgTerminalERROR(e.getMessage());
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        VendaController vendaController = new VendaController();
+        ClienteController clienteController = new ClienteController();
+        SessaoController sessaoController = new SessaoController();
+
+        vendaController.inserirRegistro(new Venda(clienteController.buscarRegistroPorId(1), 
+                                23, 
+                                "Pagamento Teste", 
+                                sessaoController.buscarRegistroPorId(3)));
+        
+        MenuFormatter.linha();
+        System.out.println(vendaController.buscarRegistroPorId(1));
+        MenuFormatter.linha();
+        vendaController.atualizarRegistro(1, new Venda(2, 
+                                clienteController.buscarRegistroPorId(1), 
+                                23, 
+                                "Pagamento Teste", 
+                                sessaoController.buscarRegistroPorId(3)));
+       
+        MenuFormatter.linha();
+        for (Venda testVenda : vendaController.listarTodosRegistros()) {
+            System.out.println(testVenda);
+            MenuFormatter.linha();
+        }
     
-    public static int contarRegistros () {
-        try (Connection conn = Database.conectar();
-            Statement stmt = conn.createStatement()) {
-            
-            int qtdVenda = 0;
-            ResultSet rs = stmt.executeQuery("SELECT COUNT(id_venda) AS resultado FROM venda;");
-            
-            while (rs.next()) {
-                qtdVenda = rs.getInt("resultado");
-            }
-
-            return qtdVenda;
-
-        } catch (SQLException e) {
-            return -999;
-        }
-    }
-
-    public static boolean existeVenda (int idVenda) {
-        String sql = "SELECT COUNT(id_venda) AS resultado FROM venda WHERE id_venda = ?;";
-        int qtdVenda = 0;
-
-        try (Connection conn = Database.conectar();
-            PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1, idVenda);
-            ResultSet rs = pstmt.executeQuery();
-
-            while (rs.next()) {
-                qtdVenda = rs.getInt("resultado");
-            }
-
-            if (qtdVenda == 0) {
-                return false;
-                
-            } else {
-                return true;
-            }
-
-        } catch (SQLException e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
-    }
-
-    private static int getMaiorId() {
-        String sql = "SELECT id_venda AS resultado FROM venda ORDER BY id_venda DESC LIMIT 1;";
-        int ultimoId = -500;
-
-        try (Connection conn = Database.conectar();
-            Statement pstmt = conn.createStatement()) {
-
-            ResultSet rs = pstmt.executeQuery(sql);
-            while (rs.next()) {
-                ultimoId = rs.getInt("resultado");
-            }
-
-            return ultimoId;
-
-        } catch (SQLException e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return -999;
-        }
+        System.out.println("Número de Registros: " + vendaController.contarRegistros());
+        System.out.println("Maior Id: " + vendaController.getMaiorId());
+        System.out.println("Registro 7 existe: " + vendaController.existeRegistro(2));
+        System.out.println("Registro 7 foi excluído: " +vendaController.excluirRegistro(2));
+        System.out.println("Registro 7 existe: " +vendaController.existeRegistro(2));
+        System.out.println("Todos os registros foram excluídos: " +vendaController.excluirTodosRegistros());
+        
     }
 }
