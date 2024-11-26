@@ -1,8 +1,13 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
 package com.trabalho.interfaces;
 
-import java.awt.Color;
-import java.awt.Dimension;
-
+/**
+ *
+ * @author samuel
+ */
 public class InserirRegistro extends javax.swing.JFrame {
 
     /**
@@ -21,220 +26,233 @@ public class InserirRegistro extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
-        panelHeader = new javax.swing.JPanel();
-        labelTitle = new javax.swing.JLabel();
-        panelContent = new javax.swing.JPanel();
-        labelInstruction = new javax.swing.JLabel();
-        buttonCinema = new javax.swing.JButton();
-        buttonEndereco = new javax.swing.JButton();
-        buttonFilme = new javax.swing.JButton();
-        buttonSessao = new javax.swing.JButton();
-        buttonVenda = new javax.swing.JButton();
-        buttonVoltar = new javax.swing.JToggleButton();
-        buttonCliente = new javax.swing.JButton();  // Novo botão para "Inserir Cliente"
+        painelSuperior = new javax.swing.JPanel();
+        tituloLabel = new javax.swing.JLabel();
+        painelInferior = new javax.swing.JPanel();
+        descricaoLabel = new javax.swing.JLabel();
+        botaoCinema = new javax.swing.JButton();
+        botaoEndereco = new javax.swing.JButton();
+        botaoFilme = new javax.swing.JButton();
+        botaoSessao = new javax.swing.JButton();
+        botaoVenda = new javax.swing.JButton();
+        botaoVoltar = new javax.swing.JToggleButton();
+        botaoCliente = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        panelHeader.setBackground(new java.awt.Color(51, 51, 51));
+        painelSuperior.setBackground(new java.awt.Color(51, 51, 51));
 
-        labelTitle.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        labelTitle.setForeground(new java.awt.Color(255, 255, 255));
-        labelTitle.setText("INSERIR REGISTRO");
+        tituloLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        tituloLabel.setForeground(new java.awt.Color(255, 255, 255));
+        tituloLabel.setText("INSERIR REGISTRO");
 
-        javax.swing.GroupLayout panelHeaderLayout = new javax.swing.GroupLayout(panelHeader);
-        panelHeader.setLayout(panelHeaderLayout);
-        panelHeaderLayout.setHorizontalGroup(
-            panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
+        javax.swing.GroupLayout painelSuperiorLayout = new javax.swing.GroupLayout(painelSuperior);
+        painelSuperior.setLayout(painelSuperiorLayout);
+        painelSuperiorLayout.setHorizontalGroup(
+            painelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelSuperiorLayout.createSequentialGroup()
                 .addContainerGap(171, Short.MAX_VALUE)
-                .addComponent(labelTitle)
+                .addComponent(tituloLabel)
                 .addGap(179, 179, 179))
         );
-        panelHeaderLayout.setVerticalGroup(
-            panelHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelHeaderLayout.createSequentialGroup()
+        painelSuperiorLayout.setVerticalGroup(
+            painelSuperiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, painelSuperiorLayout.createSequentialGroup()
                 .addContainerGap(23, Short.MAX_VALUE)
-                .addComponent(labelTitle)
+                .addComponent(tituloLabel)
                 .addGap(21, 21, 21))
         );
 
-        panelContent.setBackground(new java.awt.Color(245, 245, 245));  // Cor de fundo suave
+        painelInferior.setBackground(new java.awt.Color(255, 255, 255));
 
-        labelInstruction.setBackground(new java.awt.Color(255, 255, 255));
-        labelInstruction.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        labelInstruction.setForeground(new java.awt.Color(51, 51, 51));
+        descricaoLabel.setBackground(new java.awt.Color(255, 255, 255));
+        descricaoLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        descricaoLabel.setForeground(new java.awt.Color(255, 255, 255));
 
-        // Botões com a cor azul e texto branco, com tamanhos consistentes
-        buttonCinema.setText("CINEMA");
-        buttonCinema.setFont(new java.awt.Font("Segoe UI", 0, 14)); // Fonte do botão
-        buttonCinema.setBackground(new java.awt.Color(72, 133, 237));  // Cor azul
-        buttonCinema.setForeground(Color.WHITE);  // Texto branco
-        buttonCinema.setFocusPainted(false);
-        buttonCinema.setPreferredSize(new java.awt.Dimension(150, 40));  // Tamanho consistente
-        buttonCinema.setMaximumSize(new Dimension(150, 40)); // Forçando tamanho máximo
-        buttonCinema.setMinimumSize(new Dimension(150, 40)); // Forçando tamanho mínimo
-
-        buttonEndereco.setText("ENDEREÇO");
-        buttonEndereco.setFont(new java.awt.Font("Segoe UI", 0, 14)); 
-        buttonEndereco.setBackground(new java.awt.Color(72, 133, 237));  
-        buttonEndereco.setForeground(Color.WHITE);  
-        buttonEndereco.setFocusPainted(false);
-        buttonEndereco.setPreferredSize(new java.awt.Dimension(150, 40));  // Tamanho consistente
-        buttonEndereco.setMaximumSize(new Dimension(150, 40)); 
-        buttonEndereco.setMinimumSize(new Dimension(150, 40)); 
-
-        buttonFilme.setText("FILME");
-        buttonFilme.setFont(new java.awt.Font("Segoe UI", 0, 14)); 
-        buttonFilme.setBackground(new java.awt.Color(72, 133, 237));  
-        buttonFilme.setForeground(Color.WHITE);  
-        buttonFilme.setFocusPainted(false);
-        buttonFilme.setPreferredSize(new java.awt.Dimension(150, 40));  // Tamanho consistente
-        buttonFilme.setMaximumSize(new Dimension(150, 40)); 
-        buttonFilme.setMinimumSize(new Dimension(150, 40)); 
-
-        buttonSessao.setText("SESSÃO");
-        buttonSessao.setFont(new java.awt.Font("Segoe UI", 0, 14)); 
-        buttonSessao.setBackground(new java.awt.Color(72, 133, 237));  
-        buttonSessao.setForeground(Color.WHITE);  
-        buttonSessao.setFocusPainted(false);
-        buttonSessao.setPreferredSize(new java.awt.Dimension(150, 40));  // Tamanho consistente
-        buttonSessao.setMaximumSize(new Dimension(150, 40)); 
-        buttonSessao.setMinimumSize(new Dimension(150, 40)); 
-
-        buttonVenda.setText("VENDA");
-        buttonVenda.setFont(new java.awt.Font("Segoe UI", 0, 14)); 
-        buttonVenda.setBackground(new java.awt.Color(72, 133, 237));  
-        buttonVenda.setForeground(Color.WHITE);  
-        buttonVenda.setFocusPainted(false);
-        buttonVenda.setPreferredSize(new java.awt.Dimension(150, 40));  // Tamanho consistente
-        buttonVenda.setMaximumSize(new Dimension(150, 40)); 
-        buttonVenda.setMinimumSize(new Dimension(150, 40)); 
-
-        // Novo botão para "Inserir Cliente"
-        buttonCliente.setText("CLIENTE");
-        buttonCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); 
-        buttonCliente.setBackground(new java.awt.Color(72, 133, 237));  
-        buttonCliente.setForeground(Color.WHITE);  
-        buttonCliente.setFocusPainted(false);
-        buttonCliente.setPreferredSize(new java.awt.Dimension(150, 40));  // Tamanho consistente
-        buttonCliente.setMaximumSize(new Dimension(150, 40)); // Forçando tamanho máximo
-        buttonCliente.setMinimumSize(new Dimension(150, 40)); // Forçando tamanho mínimo
-        buttonCliente.addActionListener(new java.awt.event.ActionListener() {
+        botaoCinema.setBackground(new java.awt.Color(0, 153, 255));
+        botaoCinema.setText("CINEMA");
+        botaoCinema.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonClienteActionPerformed(evt);
+                botaoCinemaActionPerformed(evt);
             }
         });
 
-        buttonVoltar.setText("VOLTAR");
-        buttonVoltar.addActionListener(new java.awt.event.ActionListener() {
+        botaoEndereco.setBackground(new java.awt.Color(0, 153, 255));
+        botaoEndereco.setText("ENDEREÇO");
+        botaoEndereco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonVoltarActionPerformed(evt);
+                botaoEnderecoActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout panelContentLayout = new javax.swing.GroupLayout(panelContent);
-        panelContent.setLayout(panelContentLayout);
-        panelContentLayout.setHorizontalGroup(
-            panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelContentLayout.createSequentialGroup()
-                .addGroup(panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelContentLayout.createSequentialGroup()
+        botaoFilme.setBackground(new java.awt.Color(0, 153, 255));
+        botaoFilme.setText("FILME");
+        botaoFilme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoFilmeActionPerformed(evt);
+            }
+        });
+
+        botaoSessao.setBackground(new java.awt.Color(0, 153, 255));
+        botaoSessao.setText("SESSÃO");
+        botaoSessao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoSessaoActionPerformed(evt);
+            }
+        });
+
+        botaoVenda.setBackground(new java.awt.Color(0, 153, 255));
+        botaoVenda.setText("VENDA");
+        botaoVenda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoVendaActionPerformed(evt);
+            }
+        });
+
+        botaoVoltar.setText("VOLTAR");
+        botaoVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoVoltarActionPerformed(evt);
+            }
+        });
+
+        botaoCliente.setBackground(new java.awt.Color(0, 153, 255));
+        botaoCliente.setText("CLIENTE");
+        botaoCliente.setActionCommand("CLIENTE");
+        botaoCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoClienteActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout painelInferiorLayout = new javax.swing.GroupLayout(painelInferior);
+        painelInferior.setLayout(painelInferiorLayout);
+        painelInferiorLayout.setHorizontalGroup(
+            painelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelInferiorLayout.createSequentialGroup()
+                .addGroup(painelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelInferiorLayout.createSequentialGroup()
                         .addGap(104, 104, 104)
-                        .addComponent(labelInstruction)
-                        .addGap(82, 82, 82)
-                        .addGroup(panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(buttonVenda, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(buttonCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(buttonEndereco, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                                .addComponent(buttonFilme, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(buttonCinema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(buttonSessao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(panelContentLayout.createSequentialGroup()
+                        .addComponent(descricaoLabel))
+                    .addGroup(painelInferiorLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(buttonVoltar)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(botaoVoltar)))
+                .addGap(82, 82, 82)
+                .addGroup(painelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(botaoVenda, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(painelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(botaoEndereco, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
+                        .addComponent(botaoFilme, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botaoSessao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botaoCinema, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(botaoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(191, Short.MAX_VALUE))
         );
-        panelContentLayout.setVerticalGroup(
-            panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelContentLayout.createSequentialGroup()
-                .addGroup(panelContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelContentLayout.createSequentialGroup()
+        painelInferiorLayout.setVerticalGroup(
+            painelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(painelInferiorLayout.createSequentialGroup()
+                .addGroup(painelInferiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(painelInferiorLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(buttonVoltar)
-                        .addGap(142, 142, 142)
-                        .addComponent(labelInstruction))
-                    .addGroup(panelContentLayout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(buttonCinema)
+                        .addComponent(botaoVoltar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonEndereco)
+                        .addComponent(descricaoLabel))
+                    .addGroup(painelInferiorLayout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(botaoCinema)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonFilme)
+                        .addComponent(botaoEndereco)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonSessao)
+                        .addComponent(botaoFilme)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonVenda)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonCliente)))  // Novo botão CLIENTE
-                .addContainerGap(41, Short.MAX_VALUE))
+                        .addComponent(botaoSessao)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botaoVenda)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botaoCliente)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelHeader, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(painelSuperior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(painelInferior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(panelHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(painelSuperior, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(painelInferior, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>                        
 
-    private void buttonSessaoActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO: Adicionar lógica para Sessão
-    }                                           
+    private void botaoSessaoActionPerformed(java.awt.event.ActionEvent evt) {  
+        this.dispose();                                       
+        // TODO add your handling code here:
+        InserirSessao inserirSessao = new InserirSessao();
+        inserirSessao.setVisible(true);
+    }                                        
 
-    private void buttonVendaActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // TODO: Adicionar lógica para Venda
-    }                                           
+    private void botaoVendaActionPerformed(java.awt.event.ActionEvent evt) {  
+        this.dispose();                                       
+        // TODO add your handling code here:
+        InserirVenda inserirVenda = new InserirVenda();
+        inserirVenda.setVisible(true);
 
-    private void buttonEnderecoActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        // TODO: Adicionar lógica para Endereço
-    }                                             
+    }                                        
 
-    private void buttonCinemaActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO: Adicionar lógica para Cinema
-    }                                            
+    private void botaoEnderecoActionPerformed(java.awt.event.ActionEvent evt) {  
+        this.dispose();                                       
+        // TODO add your handling code here:
+        InserirEndereco inserirEndereco = new InserirEndereco();
+        inserirEndereco.setVisible(true);
+    }                                        
 
-    private void buttonFilmeActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        // Navegar para a tela de Inserir Filme
-        this.dispose();
+    private void botaoCinemaActionPerformed(java.awt.event.ActionEvent evt) {   
+        this.dispose();                                      
+        // TODO add your handling code here:
+        InserirCinema inserirCinema = new InserirCinema();
+        inserirCinema.setVisible(true);
+    }                                        
+
+    private void botaoFilmeActionPerformed(java.awt.event.ActionEvent evt) {  
+        this.dispose();                                       
+        // TODO add your handling code here:
         InserirFilme inserirFilme = new InserirFilme();
         inserirFilme.setVisible(true);
-    }                                           
+    }                                        
 
-    private void buttonClienteActionPerformed(java.awt.event.ActionEvent evt) {                                              
-        // Lógica para "Inserir Cliente"
-    }                                             
-
-    private void buttonVoltarActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // Voltar para o Menu Principal
+    private void botaoVoltarActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        // TODO add your handling code here:
         this.dispose();
+    
+        // Criar e exibir o MenuPrincipal
         MenuPrincipal menuPrincipal = new MenuPrincipal();
         menuPrincipal.setVisible(true);
-    }                                            
+        
+    }                                              
 
+    private void botaoClienteActionPerformed(java.awt.event.ActionEvent evt) {
+        this.dispose();                                         
+        // TODO add your handling code here:
+        InserirCliente inserirCliente = new InserirCliente();
+        inserirCliente.setVisible(true);
+    }                                        
+
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -262,17 +280,16 @@ public class InserirRegistro extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify                     
-    private javax.swing.JButton buttonCinema;
-    private javax.swing.JButton buttonEndereco;
-    private javax.swing.JButton buttonFilme;
-    private javax.swing.JButton buttonSessao;
-    private javax.swing.JButton buttonVenda;
-    private javax.swing.JButton buttonCliente;  // Novo botão de Cliente
-    private javax.swing.JLabel labelTitle;
-    private javax.swing.JLabel labelInstruction;
-    private javax.swing.JPanel panelHeader;
-    private javax.swing.JPanel panelContent;
-    private javax.swing.JToggleButton buttonVoltar;
+    private javax.swing.JButton botaoCinema;
+    private javax.swing.JButton botaoEndereco;
+    private javax.swing.JButton botaoFilme;
+    private javax.swing.JButton botaoSessao;
+    private javax.swing.JButton botaoVenda;
+    private javax.swing.JButton botaoCliente;
+    private javax.swing.JLabel tituloLabel;
+    private javax.swing.JLabel descricaoLabel;
+    private javax.swing.JPanel painelInferior;
+    private javax.swing.JPanel painelSuperior;
+    private javax.swing.JToggleButton botaoVoltar;
     // End of variables declaration                   
-
 }

@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CinemaInsercaoTela extends JFrame {
+public class InserirCinema extends JFrame {
     private JTextField nomeCinemaField;
     private JTable enderecoTable;
     private JButton salvarButton;
@@ -19,7 +19,7 @@ public class CinemaInsercaoTela extends JFrame {
     private CinemaController cinemaController;
     private EnderecoController enderecoController;
 
-    public CinemaInsercaoTela() {
+    public InserirCinema() {
         cinemaController = new CinemaController();
         enderecoController = new EnderecoController();
 
@@ -173,7 +173,7 @@ public class CinemaInsercaoTela extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new CinemaInsercaoTela().setVisible(true);
+                new InserirCinema().setVisible(true);
             }
         });
     }
