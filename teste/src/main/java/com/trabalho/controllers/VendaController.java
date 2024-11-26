@@ -1,6 +1,9 @@
 package com.trabalho.controllers;
 
-import com.trabalho.conexion.*;
+import com.mongodb.client.MongoCollection;
+import com.trabalho.connection.DatabaseMongoDb;
+
+import com.trabalho.connection.*;
 import com.trabalho.utils.*;
 import com.trabalho.models.*;
 
@@ -12,7 +15,11 @@ import java.sql.SQLException;
 
 import java.util.LinkedList;
 
-public class VendaController {
+import org.bson.Document;
+
+public class VendaController implements ControllerBase<Venda> {
+    private static MongoCollection<Document> vendaCollection = DatabaseMongoDb.conectar().getCollection("vendas");
+
     public static boolean inserirVenda (Venda venda) {
         String sql = "INSERT INTO venda (id_venda, nome_cliente, assento, forma_pagamento, id_secao) VALUES (?, ?, ?, ?, ?);";
 

@@ -1,8 +1,11 @@
 package com.trabalho.controllers;
 
-import com.trabalho.conexion.*;
-import com.trabalho.utils.*;
+import com.mongodb.client.MongoCollection;
+import com.trabalho.connection.DatabaseMongoDb;
+
+import com.trabalho.connection.*;
 import com.trabalho.models.*;
+import com.trabalho.utils.*;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -13,7 +16,11 @@ import java.sql.SQLException;
 
 import java.util.LinkedList;
 
-public class SessaoController {
+import org.bson.Document;
+
+public class SessaoController implements ControllerBase<Sessao> {
+    private static MongoCollection<Document> sessoesCollection = DatabaseMongoDb.conectar().getCollection("sessoes");
+    
     public static boolean inserirRegistro (Sessao sessao) {
         String sql = "INSERT INTO sessao (id_sessao, horario, id_cinema, id_filme, qtd_assentos) VALUES (?, ?, ?, ?, ?);";
 
