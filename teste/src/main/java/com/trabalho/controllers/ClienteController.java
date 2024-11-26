@@ -3,6 +3,7 @@ package com.trabalho.controllers;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import com.trabalho.models.Cliente;
 import com.trabalho.utils.MenuFormatter;
 
