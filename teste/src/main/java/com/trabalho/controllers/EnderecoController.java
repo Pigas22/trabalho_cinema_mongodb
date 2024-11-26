@@ -6,22 +6,25 @@ import com.mongodb.client.*;
 import org.bson.Document;
 
 import com.trabalho.connection.*;
+import com.trabalho.controllers.base.*;
 import com.trabalho.models.*;
 import com.trabalho.utils.*;
 
 import java.util.LinkedList;
 
-public class EnderecoController implements ControllerBase<Endereco> {
+public class EnderecoController extends ControllerBase implements IControllerBase<Endereco> {
     private MongoCollection<Document> enderecoCollection = null;
 
     public EnderecoController() {
+        super("endereco");
         this.enderecoCollection = DatabaseMongoDb.conectar().getCollection("endereco");
     }
 
     @Override
     public boolean inserirRegistro(Endereco endereco) {
         try {
-            Document doc = new Document("numero", endereco.getNumero())
+            Document doc = new Document("id_endereco", super.getMaiorId())
+                    .append("numero", endereco.getNumero())
                     .append("rua", endereco.getRua())
                     .append("bairro", endereco.getBairro())
                     .append("cidade", endereco.getCidade())
@@ -30,33 +33,6 @@ public class EnderecoController implements ControllerBase<Endereco> {
             enderecoCollection.insertOne(doc);
             return true;
 
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
-    }
-
-    @Override
-    public boolean excluirRegistro(int idEndereco) {
-        try {
-            if (existeRegistro(idEndereco)) {
-                enderecoCollection.deleteOne(Filters.eq("_id", new ObjectId(String.valueOf(idEndereco))));
-                return true;
-            } else {
-                MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
-                return false;
-            }
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
-    }
-
-    @Override
-    public boolean excluirTodosRegistros() {
-        try {
-            enderecoCollection.deleteMany(new Document());
-            return true;
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
@@ -129,28 +105,6 @@ public class EnderecoController implements ControllerBase<Endereco> {
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return null;
-        }
-    }
-
-    @Override
-    public int contarRegistros() {
-        try {
-            return (int) enderecoCollection.countDocuments();
-
-        } catch (Exception e) {
-            return -999;
-        }
-    }
-
-    @Override
-    public boolean existeRegistro(int idEndereco) {
-        try {
-            long count = enderecoCollection.countDocuments(Filters.eq("_id", new ObjectId(String.valueOf(idEndereco))));
-            return count > 0;
-
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
         }
     }
 

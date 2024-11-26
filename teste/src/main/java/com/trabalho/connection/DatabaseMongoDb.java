@@ -10,7 +10,7 @@ public class DatabaseMongoDb {
     private static final String NOME_DATABASE = "cinema_mongo_db";
     private static final String URL_MONGODB = "mongodb://localhost:27017/";
     
-    private static final String[] COLLETIONS_NAMES = { "enderecos", "cinemas", "filmes", "sessoes", "vendas" }; 
+    private static final String[] COLLETIONS_NAMES = { "endereco", "cinema", "filme", "sessao", "venda" }; 
     private static final String ARQ_INSERT = "insert_documents.json";
     private static final String NOME_PASTA_JSON = "json";
     private static final String CAMINHO_PASTA_JSON = Arquivo.procuraPasta(NOME_PASTA_JSON);
@@ -25,7 +25,7 @@ public class DatabaseMongoDb {
         }
     }
 
-    public static boolean criarDatabase() {
+    public static boolean criarDatabaseCollections() {
         try {
             MongoDatabase database = conectar();
 
@@ -72,9 +72,9 @@ public class DatabaseMongoDb {
             }
 
             // Insere enderecos
-            MongoCollection<Document> enderecos = database.getCollection("enderecos");
+            MongoCollection<Document> enderecos = database.getCollection(COLLETIONS_NAMES[0]);
             if (((int) enderecos.countDocuments()) <= 0) {
-                for (Endereco endereco : dados.getEnderecos()) {
+                for (Endereco endereco : dados.getEndereco()) {
                     Document doc = new Document("id_endereco", endereco.getIdEndereco())
                             .append("numero", endereco.getNumero())
                             .append("rua", endereco.getRua())
@@ -86,9 +86,9 @@ public class DatabaseMongoDb {
             }
 
             // Insere cinemas
-            MongoCollection<Document> cinemas = database.getCollection("cinemas");
+            MongoCollection<Document> cinemas = database.getCollection(COLLETIONS_NAMES[1]);
             if (((int) cinemas.countDocuments()) <= 0) {
-                for (Cinema cinema : dados.getCinemas()) {
+                for (Cinema cinema : dados.getCinema()) {
                     Document doc = new Document("id_cinema", cinema.getIdCinema())
                             .append("nome_cinema", cinema.getNomeCinema())
                             .append("id_endereco", cinema.getEndereco().getIdEndereco()); 
@@ -97,9 +97,9 @@ public class DatabaseMongoDb {
             }
 
             // Insere filmes
-            MongoCollection<Document> filmes = database.getCollection("filmes");
+            MongoCollection<Document> filmes = database.getCollection(COLLETIONS_NAMES[2]);
             if (((int) filmes.countDocuments()) <= 0) {
-                for (Filme filme : dados.getFilmes()) {
+                for (Filme filme : dados.getFilme()) {
                     Document doc = new Document("id_filme", filme.getIdFilme())
                             .append("nome_filme", filme.getNomeFilme())
                             .append("preco", filme.getPreco());
@@ -108,9 +108,9 @@ public class DatabaseMongoDb {
             }
 
             // Insere sessões
-            MongoCollection<Document> sessoes = database.getCollection("sessoes");
+            MongoCollection<Document> sessoes = database.getCollection(COLLETIONS_NAMES[3]);
             if (((int) sessoes.countDocuments()) <= 0) {
-                for (Sessao sessao : dados.getSessoes()) {
+                for (Sessao sessao : dados.getSessao()) {
                     Document doc = new Document("id_sessao", sessao.getIdSessao()) 
                             .append("horario", sessao.getHorario())               
                             .append("id_cinema", sessao.getCinema().getIdCinema())               
@@ -121,9 +121,9 @@ public class DatabaseMongoDb {
             }
 
             // Insere vendas
-            MongoCollection<Document> vendas = database.getCollection("vendas");
-            if (((int) cinemas.countDocuments()) <= 0) {
-                for (Venda venda : dados.getVendas()) {
+            MongoCollection<Document> vendas = database.getCollection(COLLETIONS_NAMES[4]);
+            if (((int) vendas.countDocuments()) <= 0) {
+                for (Venda venda : dados.getVenda()) {
                     Document doc = new Document("id_venda", venda.getIdVenda())
                             .append("nome_cliente", venda.getNomeCliente())
                             .append("assento", venda.getAssento())
@@ -174,7 +174,7 @@ public class DatabaseMongoDb {
 
     public static void main(String[] args) {
         droparDatabase();
-        criarDatabase();
+        criarDatabaseCollections();
         inicializarDatabase();
     }
 }

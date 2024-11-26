@@ -5,45 +5,45 @@ import java.util.List;
 import com.trabalho.models.*;
 
 public class Dados {
-    private List<Endereco> enderecos;
-    private List<Cinema> cinemas;
-    private List<Filme> filmes;
-    private List<Sessao> sessoes;
-    private List<Venda> vendas;
+    private List<Endereco> endereco;
+    private List<Cinema> cinema;
+    private List<Filme> filme;
+    private List<Sessao> sessao;
+    private List<Venda> venda;
 
     // Getters e Setters
-    public List<Endereco> getEnderecos() {
-        return enderecos;
+    public List<Endereco> getEndereco() {
+        return endereco;
     }
-    public void setEnderecos(List<Endereco> enderecos) {
-        this.enderecos = enderecos;
-    }
-
-    public List<Cinema> getCinemas() {
-        return cinemas;
-    }
-    public void setCinemas(List<Cinema> cinemas) {
-        this.cinemas = cinemas;
+    public void setEndereco(List<Endereco> endereco) {
+        this.endereco = endereco;
     }
 
-    public List<Filme> getFilmes() {
-        return filmes;
+    public List<Cinema> getCinema() {
+        return cinema;
     }
-    public void setFilmes(List<Filme> filmes) {
-        this.filmes = filmes;
-    }
-
-    public List<Sessao> getSessoes() {
-        return sessoes;
-    }
-    public void setSessoes(List<Sessao> sessoes) {
-        this.sessoes = sessoes;
+    public void setCinema(List<Cinema> cinema) {
+        this.cinema = cinema;
     }
 
-    public List<Venda> getVendas() {
-        return vendas;
+    public List<Filme> getFilme() {
+        return filme;
     }
-    public void setVendas(List<Venda> vendas) {
-        this.vendas = vendas;
+    public void setFilme(List<Filme> filme) {
+        this.filme = filme;
+    }
+
+    public List<Sessao> getSessao() {
+        return sessao;
+    }
+    public void setSessao(List<Sessao> sessao) {
+        this.sessao = sessao;
+    }
+
+    public List<Venda> getVenda() {
+        return venda;
+    }
+    public void setVenda(List<Venda> venda) {
+        this.venda = venda;
     }
 }
