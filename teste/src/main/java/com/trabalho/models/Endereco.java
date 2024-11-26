@@ -10,13 +10,13 @@ public class Endereco {
 
     public Endereco () {}
 
-    public Endereco(int idEndereco,int numero,String rua,String bairro,String cidade,String uf){
-        this.idEndereco=idEndereco;
-        this.numero=numero;
-        this.rua=rua;
-        this.bairro=bairro;
-        this.cidade=cidade;
-        this.uf=uf;
+    public Endereco(int idEndereco, int numero, String rua, String bairro, String cidade, String uf){
+        this.idEndereco = idEndereco;
+        this.numero = numero;
+        this.rua = rua;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.uf = uf;
     }
 
     public Endereco(int idEndereco, int numero, String rua, String cidade, String uf) {
@@ -32,6 +32,14 @@ public class Endereco {
         this.numero = numero;
         this.rua = rua;
         this.bairro = bairro;
+        this.cidade = cidade;
+        this.uf = uf;
+    }
+
+    public Endereco(int numero, String rua, String cidade, String uf) {
+        this.numero = numero;
+        this.rua = rua;
+        this.bairro = null;
         this.cidade = cidade;
         this.uf = uf;
     }

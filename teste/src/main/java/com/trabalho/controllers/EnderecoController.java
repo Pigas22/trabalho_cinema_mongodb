@@ -1,11 +1,9 @@
 package com.trabalho.controllers;
 
 import com.mongodb.client.model.Filters;
-import org.bson.types.ObjectId;
 import com.mongodb.client.*;
 import org.bson.Document;
 
-import com.trabalho.connection.*;
 import com.trabalho.controllers.base.*;
 import com.trabalho.models.*;
 import com.trabalho.utils.*;
@@ -17,42 +15,29 @@ public class EnderecoController extends ControllerBase implements IControllerBas
 
     public EnderecoController() {
         super("endereco");
-        this.enderecoCollection = DatabaseMongoDb.conectar().getCollection("endereco");
+        this.enderecoCollection = super.getColecao();
     }
 
     @Override
     public boolean inserirRegistro(Endereco endereco) {
         try {
-            Document doc = new Document("id_endereco", super.getMaiorId())
-                    .append("numero", endereco.getNumero())
-                    .append("rua", endereco.getRua())
-                    .append("bairro", endereco.getBairro())
-                    .append("cidade", endereco.getCidade())
-                    .append("uf", endereco.getUf());
+            int id = super.getMaiorId();
 
-            enderecoCollection.insertOne(doc);
-            return true;
-
-        } catch (Exception e) {
-            MenuFormatter.msgTerminalERROR(e.getMessage());
-            return false;
-        }
-    }
-
-    public boolean atualizarRegistro(int idEndereco, int numero, String rua, String bairro, String cidade, String uf) {
-        try {
-            if (existeRegistro(idEndereco)) {
-                Document updateDoc = new Document("$set", new Document("numero", numero)
-                        .append("rua", rua)
-                        .append("bairro", bairro)
-                        .append("cidade", cidade)
-                        .append("uf", uf));
-                enderecoCollection.updateOne(Filters.eq("_id", new ObjectId(String.valueOf(idEndereco))), updateDoc);
+            if (id != -999 && id != -500) {
+                Document doc = new Document("id_endereco", id+1)
+                        .append("numero", endereco.getNumero())
+                        .append("rua", endereco.getRua())
+                        .append("bairro", endereco.getBairro())
+                        .append("cidade", endereco.getCidade())
+                        .append("uf", endereco.getUf());
+    
+                enderecoCollection.insertOne(doc);
                 return true;
+
             } else {
-                MenuFormatter.msgTerminalERROR("Endereço não encontrado no Banco de Dados.");
                 return false;
             }
+
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
             return false;
@@ -60,19 +45,37 @@ public class EnderecoController extends ControllerBase implements IControllerBas
     }
 
     @Override
-    public boolean atualizarRegistro(Endereco endereco) {
-        return atualizarRegistro(endereco.getIdEndereco(), endereco.getNumero(), endereco.getRua(),
-                endereco.getBairro(), endereco.getCidade(), endereco.getUf());
+    public boolean atualizarRegistro(int idRegistro, Endereco endereco) {
+        try {
+            if (this.existeRegistro(idRegistro)) {
+                Document filtroId = new Document("id_endereco", idRegistro);
+                Document atualizacao = new Document("$set", new Document("numero", endereco.getNumero())
+                            .append("rua", endereco.getRua())
+                            .append("bairro", endereco.getBairro())
+                            .append("cidade", endereco.getCidade())
+                            .append("uf", endereco.getUf()));
+                
+                enderecoCollection.updateOne(filtroId, atualizacao);
+                return true;
+
+            }
+            return false;
+
+        } catch (Exception e) {
+            MenuFormatter.msgTerminalERROR(e.getMessage());
+            return false;
+        }
     }
 
     @Override
     public Endereco buscarRegistroPorId(int idEnderecoPesquisa) {
         try {
-            Document result = enderecoCollection.find(Filters.eq("_id", new ObjectId(String.valueOf(idEnderecoPesquisa))))
+            Document result = enderecoCollection.find(Filters.eq("id_endereco", idEnderecoPesquisa))
                     .first();
 
             if (result != null) {
-                return new Endereco(result.getInteger("numero"),
+                return new Endereco(idEnderecoPesquisa,
+                        result.getInteger("numero"),
                         result.getString("rua"),
                         result.getString("bairro"),
                         result.getString("cidade"),
@@ -94,7 +97,8 @@ public class EnderecoController extends ControllerBase implements IControllerBas
             MongoCursor<Document> cursor = enderecoCollection.find().iterator();
             while (cursor.hasNext()) {
                 Document doc = cursor.next();
-                listaRegistros.add(new Endereco(doc.getInteger("numero"),
+                listaRegistros.add(new Endereco(doc.getInteger("id_endereco"),
+                        doc.getInteger("numero"),
                         doc.getString("rua"),
                         doc.getString("bairro"),
                         doc.getString("cidade"),
@@ -110,7 +114,31 @@ public class EnderecoController extends ControllerBase implements IControllerBas
 
     public static void main(String[] args) {
         EnderecoController enderecoController = new EnderecoController();
+        enderecoController.inserirRegistro(new Endereco(50, "Rua dos Eucaliptos", "DM", "ES"));
+        /*
+        MenuFormatter.linha();
+        MenuFormatter.linha();
+        System.out.println(enderecoController.buscarRegistroPorId(7));
+        MenuFormatter.linha();
+        enderecoController.atualizarRegistro(7, new Endereco(80, "Rua dos Testes", "MF", "ES"));
+        MenuFormatter.linha();
+        System.out.println(enderecoController.buscarRegistroPorId(7));
+       
+        MenuFormatter.linha();
+        for (Endereco testEndereco : enderecoController.listarTodosRegistros()) {
+            System.out.println(testEndereco);
+            MenuFormatter.linha();
+        }
+        */
 
-        enderecoController.inserirRegistro(new Endereco(7, 50, "Rua dos Eucaliptos", "DM", "ES"));
+        System.out.println("Número de Registros: " + enderecoController.contarRegistros());
+        System.out.println("Maior Id: " + enderecoController.getMaiorId());
+       
+        /*
+        System.out.println("Registro 7 existe: " + enderecoController.existeRegistro(7));
+        System.out.println("Registro 7 foi excluído: " +enderecoController.excluirRegistro(7));
+        System.out.println("Registro 7 existe: " +enderecoController.existeRegistro(7));
+        System.out.println("Todos os registros foram excluídos: " +enderecoController.excluirTodosRegistros());
+        */
     }
 }

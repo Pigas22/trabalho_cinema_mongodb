@@ -7,10 +7,10 @@ public interface IControllerBase<T> {
     public boolean inserirRegistro(T objeto);
 
     // Atualizar um Registro
-    public boolean atualizarRegistro(T objeto);
+    public boolean atualizarRegistro(int idRegistro, T objeto);
 
     // Buscar um Registro pelo ID
-    public T buscarRegistroPorId(int idObjetoPesquisa);
+    public T buscarRegistroPorId(int idRegistroPesquisa);
 
     // Listar todos os Registros
     public LinkedList<T> listarTodosRegistros();
