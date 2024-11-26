@@ -1,5 +1,7 @@
 package com.trabalho.interfaces;
 
+import java.awt.Color;
+
 /**
  *
  * @author samuel
@@ -31,18 +33,27 @@ public class TelaConfig extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 102, 0));
+        // Painel Principal
+        jPanel1.setBackground(new java.awt.Color(245, 245, 245));  // Cor de fundo suave
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // Fonte moderna
+        jLabel2.setForeground(new java.awt.Color(51, 51, 51)); // Cor do texto
         jLabel2.setText("Deseja reiniciar os dados do Banco?");
 
-        botaoNaoReiniciar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        botaoNaoReiniciar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // Fonte do botão
         botaoNaoReiniciar.setText("NÃO");
+        botaoNaoReiniciar.setBackground(new java.awt.Color(255, 102, 0));  // Botão laranja
+        botaoNaoReiniciar.setForeground(Color.WHITE);
+        botaoNaoReiniciar.setFocusPainted(false);  // Remove o contorno de foco
+        botaoNaoReiniciar.setPreferredSize(new java.awt.Dimension(120, 40));
 
-        botaoReiniciar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        botaoReiniciar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // Fonte do botão
         botaoReiniciar.setText("SIM");
+        botaoReiniciar.setBackground(new java.awt.Color(72, 133, 237));  // Botão azul
+        botaoReiniciar.setForeground(Color.WHITE);
+        botaoReiniciar.setFocusPainted(false);  // Remove o contorno de foco
+        botaoReiniciar.setPreferredSize(new java.awt.Dimension(120, 40));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -70,10 +81,11 @@ public class TelaConfig extends javax.swing.JFrame {
                 .addGap(69, 69, 69))
         );
 
-        jPanel2.setBackground(new java.awt.Color(51, 51, 51));
+        // Barra superior
+        jPanel2.setBackground(new java.awt.Color(51, 51, 51)); // Cor escura para contraste
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // Negrito para o título
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255)); // Texto branco
         jLabel1.setText("CONFIGURAÇÃO");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -93,6 +105,7 @@ public class TelaConfig extends javax.swing.JFrame {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
+        // Layout da tela
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -139,7 +152,7 @@ public class TelaConfig extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable()            {
             public void run() {
                 new TelaConfig().setVisible(true);
             }

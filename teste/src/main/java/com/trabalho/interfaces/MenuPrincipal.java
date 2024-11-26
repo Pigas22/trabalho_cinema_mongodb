@@ -1,5 +1,13 @@
 package com.trabalho.interfaces;
 
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+
+/**
+ *
+ * @author samuel
+ */
 public class MenuPrincipal extends javax.swing.JFrame {
 
     /**
@@ -24,10 +32,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        // Painel superior
         jPanel2.setBackground(new java.awt.Color(51, 51, 51));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18));  // Fonte em negrito para destaque
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));  // Texto branco
         jLabel1.setText("MENU PRINCIPAL");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -47,30 +56,62 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addGap(21, 21, 21))
         );
 
-        jPanel1.setBackground(new java.awt.Color(255, 102, 0));
+        // Painel inferior (onde ficam os botões)
+        jPanel1.setBackground(new java.awt.Color(245, 245, 245)); // Cor de fundo suave
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // Fonte moderna
+        jLabel2.setForeground(new java.awt.Color(51, 51, 51));  // Texto escuro
 
+        // Botão "Relatório"
         botaoRelatorio.setText("Relatório");
+        botaoRelatorio.setFont(new java.awt.Font("Segoe UI", 0, 14)); // Fonte do botão
+        botaoRelatorio.setBackground(new java.awt.Color(72, 133, 237));  // Cor azul
+        botaoRelatorio.setForeground(Color.WHITE);  // Texto branco
+        botaoRelatorio.setFocusPainted(false); // Remove o contorno do foco
+        botaoRelatorio.setPreferredSize(new java.awt.Dimension(150, 40));
+        botaoRelatorio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                // Lógica para o botão Relatório
+            }
+        });
 
+        // Botão "Inserir Registro"
         botaoInserirRegistro.setText("Inserir Registro");
+        botaoInserirRegistro.setFont(new java.awt.Font("Segoe UI", 0, 14)); // Fonte do botão
+        botaoInserirRegistro.setBackground(new java.awt.Color(72, 133, 237)); // Cor azul
+        botaoInserirRegistro.setForeground(Color.WHITE); // Texto branco
+        botaoInserirRegistro.setFocusPainted(false); // Remove o contorno do foco
+        botaoInserirRegistro.setPreferredSize(new java.awt.Dimension(150, 40));
         botaoInserirRegistro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoInserirRegistroActionPerformed(evt);  // Chama o método para abrir a tela InserirRegistro
+                botaoInserirRegistroActionPerformed(evt);  // Abre a tela InserirRegistro
             }
         });
 
+        // Botão "Alterar Registro"
         botaoAlterarRegistro.setText("Alterar Registro");
+        botaoAlterarRegistro.setFont(new java.awt.Font("Segoe UI", 0, 14)); // Fonte do botão
+        botaoAlterarRegistro.setBackground(new java.awt.Color(72, 133, 237)); // Cor azul
+        botaoAlterarRegistro.setForeground(Color.WHITE); // Texto branco
+        botaoAlterarRegistro.setFocusPainted(false); // Remove o contorno do foco
+        botaoAlterarRegistro.setPreferredSize(new java.awt.Dimension(150, 40));
 
+        // Botão "Remover Registro"
         botaoRemoverRegistro.setText("Remover Registro");
+        botaoRemoverRegistro.setFont(new java.awt.Font("Segoe UI", 0, 14)); // Fonte do botão
+        botaoRemoverRegistro.setBackground(new java.awt.Color(72, 133, 237)); // Cor azul
+        botaoRemoverRegistro.setForeground(Color.WHITE); // Texto branco
+        botaoRemoverRegistro.setFocusPainted(false); // Remove o contorno do foco
+        botaoRemoverRegistro.setPreferredSize(new java.awt.Dimension(150, 40));
         botaoRemoverRegistro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoRemoverRegistroActionPerformed(evt);
+                botaoRemoverRegistroActionPerformed(evt);  // Lógica para Remover Registro
             }
         });
 
+        // Layout dos botões no painel inferior
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -83,10 +124,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(186, 186, 186)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(botaoInserirRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botaoAlterarRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botaoRemoverRegistro)
-                            .addComponent(botaoRelatorio, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(botaoRelatorio, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botaoInserirRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botaoAlterarRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botaoRemoverRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -105,6 +146,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addContainerGap(41, Short.MAX_VALUE))
         );
 
+        // Layout geral da tela
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
