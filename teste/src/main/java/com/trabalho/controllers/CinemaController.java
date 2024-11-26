@@ -5,20 +5,17 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoClients;
 import org.bson.Document;
 
-import com.trabalho.models.Cinema;
-import com.trabalho.utils.MenuFormatter;
+import com.trabalho.connection.DatabaseMongoDb;
+import com.trabalho.models.*;
+import com.trabalho.utils.*;
 
 import java.util.LinkedList;
+import java.util.List;
 
-public class CinemaController {
-    private static final String DATABASE_NAME = "cinemaDatabase";
-    private static final String COLLECTION_NAME = "cinema";
+public class CinemaController implements ControllerBase<Cinema> {
+    private static MongoCollection<Document> cinemaCollection = DatabaseMongoDb.conectar().getCollection("cinemas");
 
-    private static MongoCollection<Document> getCollection() {
-        MongoDatabase database = MongoClients.create().getDatabase(DATABASE_NAME);
-        return database.getCollection(COLLECTION_NAME);
-    }
-
+    @Override
     public static boolean inserirRegistro(Cinema cinema) {
         try {
             MongoCollection<Document> collection = getCollection();
@@ -36,6 +33,7 @@ public class CinemaController {
         }
     }
 
+    @Override
     public static boolean excluirRegistro(int idCinema) {
         try {
             MongoCollection<Document> collection = getCollection();
@@ -54,6 +52,7 @@ public class CinemaController {
         }
     }
 
+    @Override
     public static boolean atualizarRegistro(int idCinema, String nome, int idEndereco) {
         try {
             MongoCollection<Document> collection = getCollection();
@@ -68,10 +67,12 @@ public class CinemaController {
         }
     }
 
+    @Override
     public static boolean atualizarRegistro(Cinema cinema) {
         return atualizarRegistro(cinema.getIdCinema(), cinema.getNomeCinema(), cinema.getEndereco().getIdEndereco());
     }
 
+    @Override
     public static Cinema buscarRegistroPorId(int idCinemaPesquisa) {
         try {
             MongoCollection<Document> collection = getCollection();
@@ -93,6 +94,7 @@ public class CinemaController {
         }
     }
 
+    @Override
     public static LinkedList<Cinema> listarTodosRegistros() {
         LinkedList<Cinema> listaCinemas = new LinkedList<>();
         try {
@@ -109,6 +111,7 @@ public class CinemaController {
         return listaCinemas;
     }
 
+    @Override
     public static boolean existeRegistro(int idCinema) {
         try {
             MongoCollection<Document> collection = getCollection();
@@ -122,6 +125,7 @@ public class CinemaController {
         }
     }
 
+    @Override
     private static int getMaiorId() {
         try {
             MongoCollection<Document> collection = getCollection();
@@ -138,6 +142,7 @@ public class CinemaController {
         }
     }
 
+    @Override
     public static int contarRegistros() {
         try {
             MongoCollection<Document> collection = getCollection();

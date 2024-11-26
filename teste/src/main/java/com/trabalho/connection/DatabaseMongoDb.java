@@ -3,11 +3,7 @@ package com.trabalho.connection;
 import com.mongodb.client.*;
 import org.bson.Document;
 
-import com.trabalho.models.Cinema;
-import com.trabalho.models.Endereco;
-import com.trabalho.models.Filme;
-import com.trabalho.models.Sessao;
-import com.trabalho.models.Venda;
+import com.trabalho.models.*;
 import com.trabalho.utils.*;
 
 public class DatabaseMongoDb {
@@ -77,54 +73,64 @@ public class DatabaseMongoDb {
 
             // Insere enderecos
             MongoCollection<Document> enderecos = database.getCollection("enderecos");
-            for (Endereco endereco : dados.getEnderecos()) {
-                Document doc = new Document("id_endereco", endereco.getIdEndereco())
-                        .append("numero", endereco.getNumero())
-                        .append("rua", endereco.getRua())
-                        .append("bairro", endereco.getBairro())
-                        .append("cidade", endereco.getCidade())
-                        .append("uf", endereco.getUf());
-                enderecos.insertOne(doc);
+            if (((int) enderecos.countDocuments()) <= 0) {
+                for (Endereco endereco : dados.getEnderecos()) {
+                    Document doc = new Document("id_endereco", endereco.getIdEndereco())
+                            .append("numero", endereco.getNumero())
+                            .append("rua", endereco.getRua())
+                            .append("bairro", endereco.getBairro())
+                            .append("cidade", endereco.getCidade())
+                            .append("uf", endereco.getUf());
+                    enderecos.insertOne(doc);
+                }
             }
 
             // Insere cinemas
             MongoCollection<Document> cinemas = database.getCollection("cinemas");
-            for (Cinema cinema : dados.getCinemas()) {
-                Document doc = new Document("id_cinema", cinema.getIdCinema())
-                        .append("nome_cinema", cinema.getNomeCinema())
-                        .append("id_endereco", cinema.getEndereco().getIdEndereco()); 
-                cinemas.insertOne(doc);
+            if (((int) cinemas.countDocuments()) <= 0) {
+                for (Cinema cinema : dados.getCinemas()) {
+                    Document doc = new Document("id_cinema", cinema.getIdCinema())
+                            .append("nome_cinema", cinema.getNomeCinema())
+                            .append("id_endereco", cinema.getEndereco().getIdEndereco()); 
+                    cinemas.insertOne(doc);
+                }
             }
 
             // Insere filmes
             MongoCollection<Document> filmes = database.getCollection("filmes");
-            for (Filme filme : dados.getFilmes()) {
-                Document doc = new Document("id_filme", filme.getIdFilme())
-                        .append("nome_filme", filme.getNomeFilme())
-                        .append("preco", filme.getPreco());
-                filmes.insertOne(doc);
+            if (((int) filmes.countDocuments()) <= 0) {
+                for (Filme filme : dados.getFilmes()) {
+                    Document doc = new Document("id_filme", filme.getIdFilme())
+                            .append("nome_filme", filme.getNomeFilme())
+                            .append("preco", filme.getPreco());
+                    filmes.insertOne(doc);
+                }
             }
 
             // Insere sessões
             MongoCollection<Document> sessoes = database.getCollection("sessoes");
-            for (Sessao sessao : dados.getSessoes()) {
-                Document doc = new Document("id_sessao", sessao.getIdSessao()) 
-                        .append("horario", sessao.getHorario())               
-                        .append("id_cinema", sessao.getCinema().getIdCinema())               
-                        .append("id_filme", sessao.getFilme().getIdFilme())               
-                        .append("qtd_assentos", sessao.getQtdAssentos());
-                sessoes.insertOne(doc);
+            if (((int) sessoes.countDocuments()) <= 0) {
+                for (Sessao sessao : dados.getSessoes()) {
+                    Document doc = new Document("id_sessao", sessao.getIdSessao()) 
+                            .append("horario", sessao.getHorario())               
+                            .append("id_cinema", sessao.getCinema().getIdCinema())               
+                            .append("id_filme", sessao.getFilme().getIdFilme())               
+                            .append("qtd_assentos", sessao.getQtdAssentos());
+                    sessoes.insertOne(doc);
+                }
             }
 
             // Insere vendas
             MongoCollection<Document> vendas = database.getCollection("vendas");
-            for (Venda venda : dados.getVendas()) {
-                Document doc = new Document("id_venda", venda.getIdVenda())
-                        .append("nome_cliente", venda.getNomeCliente())
-                        .append("assento", venda.getAssento())
-                        .append("forma_pagamento", venda.getFormaPagamento())
-                        .append("id_sessao", venda.getSessao().getIdSessao());
-                vendas.insertOne(doc);
+            if (((int) cinemas.countDocuments()) <= 0) {
+                for (Venda venda : dados.getVendas()) {
+                    Document doc = new Document("id_venda", venda.getIdVenda())
+                            .append("nome_cliente", venda.getNomeCliente())
+                            .append("assento", venda.getAssento())
+                            .append("forma_pagamento", venda.getFormaPagamento())
+                            .append("id_sessao", venda.getSessao().getIdSessao());
+                    vendas.insertOne(doc);
+                }
             }
 
             MenuFormatter.msgTerminalINFO("Dados inseridos no banco de dados '" + NOME_DATABASE + "'.");
@@ -167,8 +173,8 @@ public class DatabaseMongoDb {
     }
 
     public static void main(String[] args) {
-        // criarDatabase();
-
+        droparDatabase();
+        criarDatabase();
         inicializarDatabase();
     }
 }

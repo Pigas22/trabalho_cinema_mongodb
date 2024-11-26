@@ -23,7 +23,7 @@
         {"idFilme": 7,  "nomeFilme": "Gladiador",         "preco": 16.50},
         {"idFilme": 8,  "nomeFilme": "Jurassic Park",     "preco": 13.90},
         {"idFilme": 9,  "nomeFilme": "Star Wars",         "preco": 20.00},
-        {"idFilme": 10, "nomeFilme":  "O Rei Leao",       "preco": 12.80}
+        {"idFilme": 10, "nomeFilme": "O Rei Leao",        "preco": 12.80}
     ],
     "sessoes": [
         {"idSessao": 1,  "horario": "2024-10-20 14:00:00", "idCinema": 1, "idFilme": 1, "qtdAssentos": 20},
