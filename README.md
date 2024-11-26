@@ -27,22 +27,34 @@ Esse projeto também foi utilizado para o Trabalho da matéria *`Linguagem de Pr
 ### ✅ Requisitos:
 Para o funcionamento correto do projeto, é necessário que tenha as seguintes tecnologias instaladas:
 - **`JAVA`** (17 ou mais recente);
-- **`Maven`** (3.8.0 ou mais recente).
+- **`Maven`** (v3.8.0 ou mais recente);
+- **`MongoDB`** (v2.3.3 ou mais recente)
 
 OBS: para o java é possível instalar a extensão do JAVA no vs code que instala uma JDK 17.
 
 ### ❓  Como Utilizar:
-Após a instalação dos Requisitos acima, é necessário configurar a conexão do Banco de Dados com a Aplicação, para isso, navegue até a Classe [<u>__DatabaseMongoDb.java__</u>](https://github.com/Pigas22/trabalho_cinema_mongodb/blob/0f3e8d7f504c792ef48621d85c8192bcf89b87a1/teste/src/main/java/com/trabalho/connection/DatabaseMongoDb.java), segue abaixo as váriaveis à serem configuradas na classe, sendo assim:
+Após a instalação dos Requisitos acima, é necessário executar um comando Maven para instalar as dependências necessárias pra aplicação, para isso basta caminha até a pasta, _`trabalho_cinema_mongodb/teste`_:
+
+
+```bash
+cd ./trabalho_cinema_mongodb/teste
+```
+
+E assim executar o comando Maven:
+```bash
+mvn clean package
+```
+
+Por fim, devemos configurar a conexão do Banco de Dados com a Aplicação, para isso, navegue até a Classe [<u>__DatabaseMongoDb.java__</u>](https://github.com/Pigas22/trabalho_cinema_mongodb/blob/0f3e8d7f504c792ef48621d85c8192bcf89b87a1/teste/src/main/java/com/trabalho/connection/DatabaseMongoDb.java), nela será possível observar as seguintes variáveis:
 
 #### 📘 Váriaveis referentes à conexão:
 - **_`NOME_DATABASE`_** : Refere-se ao nome do Banco de Dados que será criado para a utilização da aplicação.
-- **_`URL_MONGODB`_** : Refere-se à URL utilizada para encontrar e conectar no banco.
+- **_`URL_MONGODB`_** : Refere-se à URL utilizada para encontrar e conectar com o serviço do MongoDB, para assim acessarmos o banco.
 ```Java
 private static final String NOME_DATABASE = "cinema_mongo_db";
 private static final String URL_MONGODB = "mongodb://localhost:27017/";
 ```
 
-#### 📕 Váriaveis referentes aos usuários do PostgreSQL:
 Após a configuração das váriaveis da classe _Database.java_, basta executar a Classe Principal, [**App.java**](https://github.com/Pigas22/trabalho_cinema_mongodb/blob/0f3e8d7f504c792ef48621d85c8192bcf89b87a1/teste/src/main/java/com/trabalho/App.java). 
 Assim que iniciada, apresentará uma pergunta referente à reiniciar o Banco, caso seja a 1° execução do programa, é **EXTREMAMENTE** recomendado que responda à esta pergunta com `"Sim"`. Dessa forma o Banco de Dados será criado e inicializado com suas tabelas e seus respectivos dados. 
 
