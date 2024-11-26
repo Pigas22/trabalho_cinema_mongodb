@@ -15,7 +15,7 @@ import org.bson.Document;
 import com.trabalho.connection.*;
 import com.trabalho.utils.*;
 
-abstract class Relatorio {
+public class Relatorio {
     public static LinkedList<DadosSomaIngressos> listaDadosSomaIngressos() {
         LinkedList<DadosSomaIngressos> relatSomaIngresso = new LinkedList<DadosSomaIngressos>();
         try {
@@ -115,7 +115,7 @@ abstract class Relatorio {
         }
         */
 
-        /* TESTE 03
+        /*
         for (DadosInformacaoSessoes item : Relatorio.listarInfoSessoes()) {
             System.out.println(item);
             MenuFormatter.linha();

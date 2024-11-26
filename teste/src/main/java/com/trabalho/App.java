@@ -2,6 +2,7 @@ package com.trabalho;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.LinkedList;
 
 import com.trabalho.connection.*;
 import com.trabalho.utils.*;
@@ -47,27 +48,26 @@ public class App {
             if (opcao == 1) {
                 Menu.imprimirMenuRelatorio();
                 int opcaoRelatorio = scanner.nextInt();
-                String relatorio = "";
 
                 MenuFormatter.limparTerminal();
                 switch (opcaoRelatorio) {
                     case 1:
                         MenuFormatter.titulo("RELATÓRIO");
-                        relatorio = Relatorio.listarCinemaEndereco();
+                        LinkedList<DadosCinemaEndereco> relatorio1 = Relatorio.listarCinemaEndereco();
                         break;
                     case 2:
                         MenuFormatter.titulo("RELATÓRIO");
-                        relatorio = Relatorio.listarInformacoes();
+                        LinkedList<DadosInformacaoSessoes> relatorio2 = Relatorio.listarInfoSessoes();
                         break;
                     case 3:
                         MenuFormatter.titulo("RELATÓRIO");
-                        relatorio = Relatorio.listarSomaIngressos();
+                        LinkedList<DadosSomaIngressos> relatorio3 = Relatorio.listaDadosSomaIngressos();
                         break;
                     default:
                         break;
                 }
 
-                System.out.println(relatorio);
+                // System.out.println(relatorio);
 
                 MenuFormatter.delay(3);
 
