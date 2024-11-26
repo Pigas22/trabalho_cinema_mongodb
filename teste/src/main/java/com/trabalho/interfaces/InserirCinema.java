@@ -163,10 +163,9 @@ public class InserirCinema extends JFrame {
     }
 
     private void voltarTelaAnterior() {
-        // Lógica para voltar à tela anterior, se necessário
-        // Aqui, apenas um simples print, mas pode ser ajustado conforme a aplicação
-        System.out.println("Voltar à tela anterior");
         dispose(); // Fecha a janela atual
+        InserirRegistro inserirRegistro = new InserirRegistro();
+        inserirRegistro.setVisible(true);
     }
 
     public static void main(String[] args) {

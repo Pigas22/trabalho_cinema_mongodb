@@ -1,5 +1,8 @@
 package com.trabalho.interfaces;
 
+import com.trabalho.controllers.FilmeController;
+import com.trabalho.models.Filme;
+
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -147,22 +150,55 @@ public class InserirFilme extends javax.swing.JFrame {
         pack();
     }// </editor-fold>                        
 
-    private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
-        String nomeFilme = txtNomeFilme.getText();
-        String precoFilme = txtPrecoFilme.getText();
+    private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {
+        String nomeFilme = txtNomeFilme.getText().trim();
+        String precoFilmeStr = txtPrecoFilme.getText().trim();
         
-        if (nomeFilme.isEmpty() || precoFilme.isEmpty()) {
-            // Exibir mensagem de erro ou alerta
-        } else {
-            // Inserir o filme no banco de dados ou em algum lugar
+        if (nomeFilme.isEmpty() || precoFilmeStr.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Preencha todos os campos antes de inserir.", 
+                "Erro", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }//GEN-LAST:event_btnInserirActionPerformed
+        
+        try {
+            double precoFilme = Double.parseDouble(precoFilmeStr);
+            Filme novoFilme = new Filme(nomeFilme, precoFilme);
+            FilmeController filmeController = new FilmeController();
+            
+            boolean inserido = filmeController.inserirRegistro(novoFilme);
+            if (inserido) {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Filme inserido com sucesso!", 
+                    "Sucesso", 
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                txtNomeFilme.setText("");
+                txtPrecoFilme.setText("");
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "Erro ao inserir o filme. Tente novamente.", 
+                    "Erro", 
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Preço inválido. Insira um número válido.", 
+                "Erro", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Ocorreu um erro: " + e.getMessage(), 
+                "Erro", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
-    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {                                          
         this.dispose();
-        MenuPrincipal menuPrincipal = new MenuPrincipal();
-        menuPrincipal.setVisible(true);
-    }//GEN-LAST:event_btnVoltarActionPerformed
+        InserirRegistro inserirRegistro = new InserirRegistro();
+        inserirRegistro.setVisible(true);
+    }                                         
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -172,7 +208,7 @@ public class InserirFilme extends javax.swing.JFrame {
         });
     }
 
-    // Variables declaration - do not modify                     
+    // Variables declaration                   
     private javax.swing.JButton btnInserir;
     private javax.swing.JToggleButton btnVoltar;
     private javax.swing.JLabel jLabel1;
