@@ -1,5 +1,9 @@
 package com.trabalho.interfaces;
 
+import com.trabalho.controllers.EnderecoController;
+import com.trabalho.models.Endereco;
+import javax.swing.JOptionPane;
+
 public class InserirEndereco extends javax.swing.JFrame {
 
     public InserirEndereco() {
@@ -8,48 +12,33 @@ public class InserirEndereco extends javax.swing.JFrame {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-
+        // Inicialização de componentes da interface
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        jTextField1 = new javax.swing.JTextField(); // Número
+        jTextField2 = new javax.swing.JTextField(); // Rua
+        jTextField3 = new javax.swing.JTextField(); // Bairro
+        jTextField4 = new javax.swing.JTextField(); // Cidade
+        jTextField5 = new javax.swing.JTextField(); // UF
+        jButton5 = new javax.swing.JButton(); // Inserir
+        jToggleButton1 = new javax.swing.JToggleButton(); // Voltar
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        // Top Panel (Header)
+        // Configuração do painel de topo
         jPanel2.setBackground(new java.awt.Color(51, 51, 51));
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 22)); // Bold font
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 22));
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("Inserir Endereço");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabel1)
-                .addGap(20, 20, 20))
-        );
-
-        // Main Panel (Form)
+        // Configuração do painel principal (formulário)
         jPanel1.setBackground(new java.awt.Color(245, 245, 245));
 
         jLabel3.setText("Número");
@@ -58,18 +47,25 @@ public class InserirEndereco extends javax.swing.JFrame {
         jLabel6.setText("Bairro");
         jLabel7.setText("UF");
 
+        // Botão de Inserir
         jButton5.setText("Inserir");
         jButton5.setBackground(new java.awt.Color(72, 133, 237));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); 
+        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14));
         jButton5.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         jButton5.setFocusPainted(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
+        // Botão de Voltar
         jToggleButton1.setText("Voltar");
-        jToggleButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); 
+        jToggleButton1.setFont(new java.awt.Font("Segoe UI", 1, 14));
         jToggleButton1.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         jToggleButton1.setFocusPainted(false);
 
-        // Layout Configuration
+        // Layout de componentes
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -127,7 +123,7 @@ public class InserirEndereco extends javax.swing.JFrame {
                 .addGap(20, 20, 20))
         );
 
-        // Frame Layout
+        // Layout da janela
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -146,10 +142,50 @@ public class InserirEndereco extends javax.swing.JFrame {
         pack();
     }
 
+    // Ação do botão Inserir
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
+        // Obter dados dos campos
+        String numeroStr = jTextField1.getText();
+        String rua = jTextField2.getText();
+        String bairro = jTextField3.getText();
+        String cidade = jTextField4.getText();
+        String uf = jTextField5.getText();
+
+        // Verificar se os campos não estão vazios
+        if (numeroStr.isEmpty() || rua.isEmpty() || bairro.isEmpty() || cidade.isEmpty() || uf.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, preencha todos os campos.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validar se o número é um inteiro
+        int numero;
+        try {
+            numero = Integer.parseInt(numeroStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "O número informado não é válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Criar o objeto Endereco
+        Endereco endereco = new Endereco(numero, rua, bairro, cidade, uf);
+
+        // Chamar o controller para inserir no banco de dados
+        EnderecoController enderecoController = new EnderecoController();
+        boolean sucesso = enderecoController.inserirRegistro(endereco);
+
+        // Exibir mensagem de sucesso ou erro
+        if (sucesso) {
+            JOptionPane.showMessageDialog(this, "Endereço inserido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao inserir endereço.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> new InserirEndereco().setVisible(true));
     }
 
+    // Variáveis declaradas (componentes da interface)
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1, jLabel2, jLabel3, jLabel4, jLabel5, jLabel6, jLabel7;
     private javax.swing.JPanel jPanel1, jPanel2;
