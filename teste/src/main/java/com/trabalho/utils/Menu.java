@@ -151,6 +151,7 @@ public class Menu {
         MenuFormatter.titulo("INSERIR - FILME");
 
         System.out.print("Digite o nome do Filme: ");
+        scanner.reset();
         String nome = scanner.nextLine();
         
         scanner.reset();
