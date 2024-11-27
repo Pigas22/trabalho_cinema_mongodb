@@ -3,8 +3,9 @@ package com.trabalho.utils;
 import com.trabalho.controllers.*;
 import com.trabalho.models.*;
 
-import java.util.List;
 import java.util.Scanner;
+import java.util.List;
+
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.io.IOException;
@@ -79,8 +80,8 @@ public class Menu {
         System.out.println("|       ESCOLHER RELATÓRIO       |");
         System.out.println("==================================");
         System.out.println("| 1. Cinema e Endereço           |");
-        System.out.println("| 2. Informações                 |");
-        System.out.println("| 3. Soma dos Ingressos          |");
+        System.out.println("| 2. Informações das Sessões     |");
+        System.out.println("| 3. Valor Arrecadado por Filme  |");
         System.out.println("==================================");
         System.out.print("Escolha uma opção: ");    
     }

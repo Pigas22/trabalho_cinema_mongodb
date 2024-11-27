@@ -1,21 +1,21 @@
-package com.trabalho.reports;
+package com.trabalho.reports.dados;
 
 public class DadosSomaIngressos {
-    private int secaoID;
+    private int sessaoID;
     private String nomeFilme;
     private double valorTotal;
 
-    public DadosSomaIngressos(int secaoID, String nomeFilme, double valorTotal) {
-        this.secaoID = secaoID;
+    public DadosSomaIngressos(int sessaoID, String nomeFilme, double valorTotal) {
+        this.sessaoID = sessaoID;
         this.nomeFilme = nomeFilme;
         this.valorTotal = valorTotal;
     }
 
-    public int getSecaoID() {
-        return secaoID;
+    public int getSessaoID() {
+        return sessaoID;
     }
-    public void setSecaoID(int secaoID) {
-        this.secaoID = secaoID;
+    public void setSessaoID(int sessaoID) {
+        this.sessaoID = sessaoID;
     }
 
     public String getNomeFilme() {
@@ -35,7 +35,7 @@ public class DadosSomaIngressos {
     @Override
     public String toString() {
         return "DadosSomaIngressos [" + "\n" +
-            "   secaoID = " + secaoID + "\n" +
+            "   sessaoID = " + sessaoID + "\n" +
             "   nomeFilme = " + nomeFilme + "\n" +
             "   valorTotal = " + valorTotal + "\n" +
             "]";

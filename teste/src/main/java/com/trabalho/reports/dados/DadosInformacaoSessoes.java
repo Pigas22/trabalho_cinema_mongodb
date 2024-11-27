@@ -1,16 +1,25 @@
-package com.trabalho.reports;
+package com.trabalho.reports.dados;
 
 public class DadosInformacaoSessoes {
+    private int idSessao;
     private String horario;
     private String nomeFilme;
     private int qtdAssentos;
     private double preco;
 
-    public DadosInformacaoSessoes(String horario, String nomeFilme, int qtdAssentos, double preco) {
+    public DadosInformacaoSessoes(int idSessao, String horario, String nomeFilme, int qtdAssentos, double preco) {
+        this.idSessao = idSessao;
         this.horario = horario;
         this.nomeFilme = nomeFilme;
         this.qtdAssentos = qtdAssentos;
         this.preco = preco;
+    }
+
+    public int getIdSessao() {
+        return idSessao;
+    }
+    public void setIdSessao(int idSessao) {
+        this.idSessao = idSessao;
     }
 
     public String getHorario() {
@@ -44,6 +53,7 @@ public class DadosInformacaoSessoes {
     @Override
     public String toString() {
         return "DadosInformacaoSessoes [" + "\n" +
+            "   idSessao = " + idSessao + "\n" +
             "   horario = " + horario + "\n" +
             "   nomeFilme = " + nomeFilme + "\n" +
             "   qtdAssentos = " + qtdAssentos + "\n" +

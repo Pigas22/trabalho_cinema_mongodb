@@ -2,7 +2,6 @@ package com.trabalho;
 
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.LinkedList;
 
 import com.trabalho.connection.*;
 import com.trabalho.utils.*;
@@ -48,26 +47,27 @@ public class App {
             if (opcao == 1) {
                 Menu.imprimirMenuRelatorio();
                 int opcaoRelatorio = scanner.nextInt();
+                String relatorio = "";
 
                 MenuFormatter.limparTerminal();
                 switch (opcaoRelatorio) {
                     case 1:
-                        MenuFormatter.titulo("RELATÓRIO");
-                        LinkedList<DadosCinemaEndereco> relatorio1 = Relatorio.listarCinemaEndereco();
+                        MenuFormatter.titulo("RELATÓRIO - Cinema x Endereço");
+                        relatorio = Relatorio.tabelaDadosCinemaEndereco();
                         break;
                     case 2:
-                        MenuFormatter.titulo("RELATÓRIO");
-                        LinkedList<DadosInformacaoSessoes> relatorio2 = Relatorio.listarInfoSessoes();
+                        MenuFormatter.titulo("RELATÓRIO - Informações das Sessões");
+                        relatorio = Relatorio.tabelaDadosInfoSessoes();
                         break;
                     case 3:
-                        MenuFormatter.titulo("RELATÓRIO");
-                        LinkedList<DadosSomaIngressos> relatorio3 = Relatorio.listaDadosSomaIngressos();
+                        MenuFormatter.titulo("RELATÓRIO - Valor Arrecadado por Filme");
+                        relatorio = Relatorio.tabelaDadosSomaIngressos();
                         break;
                     default:
                         break;
                 }
 
-                // System.out.println(relatorio);
+                System.out.println(relatorio);
 
                 MenuFormatter.delay(3);
 
