@@ -3,9 +3,9 @@ package com.trabalho.reports.dados;
 public class DadosSomaIngressos {
     private int sessaoID;
     private String nomeFilme;
-    private double valorTotal;
+    private String valorTotal;
 
-    public DadosSomaIngressos(int sessaoID, String nomeFilme, double valorTotal) {
+    public DadosSomaIngressos(int sessaoID, String nomeFilme, String valorTotal) {
         this.sessaoID = sessaoID;
         this.nomeFilme = nomeFilme;
         this.valorTotal = valorTotal;
@@ -25,10 +25,10 @@ public class DadosSomaIngressos {
         this.nomeFilme = nomeFilme;
     }
 
-    public double getValorTotal() {
+    public String getValorTotal() {
         return valorTotal;
     }
-    public void setValorTotal(double valorTotal) {
+    public void setValorTotal(String valorTotal) {
         this.valorTotal = valorTotal;
     }
 

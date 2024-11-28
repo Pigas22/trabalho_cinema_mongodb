@@ -3,17 +3,24 @@ package com.trabalho.reports;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.FindIterable;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Date;
 
 import org.bson.conversions.Bson;
 import org.bson.Document;
 
 import com.trabalho.reports.dados.*;
+import com.trabalho.controllers.*;
 import com.trabalho.connection.*;
+import com.trabalho.models.*;
 import com.trabalho.utils.*;
 
 public class Relatorio {
@@ -24,21 +31,23 @@ public class Relatorio {
     // Relatório CinemaEndereco
     private static void atualizaListaCinemaEndereco() {
         LinkedList<DadosCinemaEndereco> relatCinemaEndereco = new LinkedList<DadosCinemaEndereco>();
+        EnderecoController enderecoController = new EnderecoController();
 
         try {
             MongoCollection<Document> cinemas = DatabaseMongoDb.conectar().getCollection("cinema");
 
             // Projeção para nome do cinema e rua do endereço
             FindIterable<Document> resultados = cinemas.find()
-                .projection(new Document("id_cinema", 1).append("nome_cinema", 1).append("endereco.rua", 1).append("endereco.cidade", 1));
+                .projection(new Document("id_cinema", 1).append("nome_cinema", 1).append("id_endereco", 1));
 
             for (Document doc : resultados) {
                 int idCinema = doc.getInteger("id_cinema");
                 String nomeCinema = doc.getString("nome_cinema");
-                String enderecoRua = doc.getEmbedded(List.of("endereco", "rua"), String.class);
-                String enderecoCidade = doc.getEmbedded(List.of("endereco", "cidade"), String.class);
-
+                Endereco endereco = enderecoController.buscarRegistroPorId(doc.getInteger("id_endereco"));
                 
+                String enderecoRua = endereco.getRua();
+                String enderecoCidade = endereco.getCidade();
+
                 relatCinemaEndereco.add(new DadosCinemaEndereco(idCinema, nomeCinema, enderecoRua, enderecoCidade));
             }
 
@@ -46,6 +55,7 @@ public class Relatorio {
 
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
+            MenuFormatter.delay(1);
             Relatorio.listaCinemaEndereco = null;
         }
     }
@@ -61,6 +71,7 @@ public class Relatorio {
 
         if (Relatorio.listaCinemaEndereco.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhum dado disponível para o Relatório.");
+            MenuFormatter.delay(2);
             return "Sem dados";
         }
         
@@ -86,27 +97,41 @@ public class Relatorio {
     // Relatório InfoSessoes
     private static void atualizaListaInfoSessoes() {
         LinkedList<DadosInformacaoSessoes> relatInfoSessoes = new LinkedList<DadosInformacaoSessoes>();
+        FilmeController filmeController = new FilmeController();
+
         try {
             MongoCollection<Document> sessoes = DatabaseMongoDb.conectar().getCollection("sessao");
 
             // Projeção para dados necessários
             FindIterable<Document> resultados = sessoes.find()
-                .projection(new Document("id_sesssao", 1).append("horario", 1).append("filme", 1).append("qtd_assentos", 1).append("preco", 1));
+                .projection(new Document("id_sessao", 1).append("horario", 1).append("id_filme", 1).append("qtd_assentos", 1));
 
             for (Document doc : resultados) {
                 int idSessao = doc.getInteger("id_sessao");
-                String horario = doc.getString("horario");
-                String nomeFilme = doc.getString("filme");
-                int qtdAssentos = doc.getInteger("qtd_assentos");
-                double preco = doc.getDouble("preco");
+                Date horario = doc.getDate("horario");
+                LocalDateTime horarioFormatado = horario.toInstant()
+                                        .atZone(ZoneId.systemDefault())
+                                        .toLocalDateTime();
 
-                relatInfoSessoes.add(new DadosInformacaoSessoes (idSessao, horario, nomeFilme, qtdAssentos, preco));
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                String horarioExibicao = horarioFormatado.format(formatter);
+
+                int qtdAssentos = doc.getInteger("qtd_assentos");
+
+                Filme filme = filmeController.buscarRegistroPorId(doc.getInteger("id_filme"));
+
+                String nomeFilme = filme.getNomeFilme();
+                double preco = filme.getPreco();
+
+                relatInfoSessoes.add(new DadosInformacaoSessoes (idSessao, horarioExibicao, nomeFilme, qtdAssentos, preco));
             }
 
             Relatorio.listaInfoSessoes = relatInfoSessoes;
 
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
+            MenuFormatter.delay(1);
             Relatorio.listaInfoSessoes =  null;
         }
     }
@@ -122,6 +147,7 @@ public class Relatorio {
 
         if (Relatorio.listaInfoSessoes.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhum dado disponível para o Relatório.");
+            MenuFormatter.delay(1);
             return "Sem dados";
         }
         
@@ -146,33 +172,44 @@ public class Relatorio {
 
     // Relatório SomaIngresso
     private static void atualizaListaSomaIngresso() {
-        LinkedList<DadosSomaIngressos> relatSomaIngresso = new LinkedList<DadosSomaIngressos>();
+        LinkedList<DadosSomaIngressos> relatSomaIngresso = new LinkedList<>();
         try {
-            MongoCollection<Document> sessoes = DatabaseMongoDb.conectar().getCollection("sessao");
+            MongoCollection<Document> vendaCollection = DatabaseMongoDb.conectar().getCollection("venda");
 
-            // Agregação para calcular valor total por seção
             List<Bson> pipeline = List.of(
+                Aggregates.lookup("sessao", "id_sessao", "id_sessao", "sessao_detalhes"),
+                
+                Aggregates.unwind("$sessao_detalhes"),
+                
+                Aggregates.lookup("filme", "sessao_detalhes.id_filme", "id_filme", "filme_detalhes"),
+                
+                Aggregates.unwind("$filme_detalhes"),
+                
                 Aggregates.group(
-                    "$id_sessao",
-                    Accumulators.sum("valor_total", "$preco"),
-                    Accumulators.first("filme", "$filme")
-                )
+                    new Document("id_sessao", "$id_sessao").append("nome_filme", "$filme_detalhes.nome_filme"),
+                    Accumulators.sum("valor_final", "$filme_detalhes.preco")
+                ),
+                
+                Aggregates.sort(Sorts.descending("valor_final"))
             );
 
-            AggregateIterable<Document> resultados = sessoes.aggregate(pipeline);
+            AggregateIterable<Document> resultados = vendaCollection.aggregate(pipeline);
 
             for (Document doc : resultados) {
-                int sessaoID = doc.getInteger("_id");
-                String nomeFilme = doc.getString("filme");
-                double valorTotal = doc.getDouble("valor_total");
+                Document idDoc = doc.get("_id", Document.class);
+                int sessaoID = idDoc.getInteger("id_sessao");
+                String nomeFilme = idDoc.getString("nome_filme");
+                double valorTotal = doc.getDouble("valor_final");
+                String valorFormatado = String.format("%.2f", valorTotal);
 
-                relatSomaIngresso.add(new DadosSomaIngressos(sessaoID, nomeFilme, valorTotal));   
+                relatSomaIngresso.add(new DadosSomaIngressos(sessaoID, nomeFilme, valorFormatado));
             }
 
             Relatorio.listaSomaIngresso = relatSomaIngresso;
 
         } catch (Exception e) {
             MenuFormatter.msgTerminalERROR(e.getMessage());
+            MenuFormatter.delay(1);
             Relatorio.listaSomaIngresso = null;
         }
     }
@@ -188,11 +225,12 @@ public class Relatorio {
 
         if (Relatorio.listaSomaIngresso.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhum dado disponível para o Relatório.");
+            MenuFormatter.delay(1);
             return "Sem dados";
         }
         
         int tamanho = MenuFormatter.getNumEspacamentoUni()+2;
-        String[] cabecalho = {"Sessão ID", "Filme", "Valor Total"};
+        String[] cabecalho = {"Sessão ID", "Filme", "Valor Total (R$)"};
         String[] linhas = new String[Relatorio.listaSomaIngresso.size()];
         int cont = 0;
         

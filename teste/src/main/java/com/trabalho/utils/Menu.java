@@ -117,6 +117,7 @@ public class Menu {
         List<Endereco> enderecos =  enderecoController.listarTodosRegistros ();
         if (enderecos.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhum endereço disponível. Por favor, insira um endereço antes.");
+            MenuFormatter.delay(1);
             return;
         }
         
@@ -141,6 +142,7 @@ public class Menu {
 
         if (enderecoSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de endereço inválido.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -171,12 +173,14 @@ public class Menu {
         List<Cinema> cinemas = cinemaController.listarTodosRegistros();
         if (cinemas.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhum cinema disponível. Por favor, insira um cinema antes.");
+            MenuFormatter.delay(1);
             return;
         }
     
         List<Filme> filmes = filmeController.listarTodosRegistros();
         if (filmes.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhum filme disponível. Por favor, insira um filme antes.");
+            MenuFormatter.delay(1);
             return;
         }
     
@@ -205,6 +209,7 @@ public class Menu {
     
         if (cinemaSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de cinema inválido.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -235,6 +240,7 @@ public class Menu {
     
         if (filmeSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de filme inválido.");
+            MenuFormatter.delay(2);
             return;
         }
     
@@ -258,6 +264,7 @@ public class Menu {
         List<Sessao> secoes = sessaoController.listarTodosRegistros();
         if (secoes.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhuma sessão disponível. Por favor, insira uma sessão antes.");
+            MenuFormatter.delay(1);
             return;
         }
 
@@ -298,6 +305,7 @@ public class Menu {
 
         if (sessaoSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de seção inválido");
+            MenuFormatter.delay(2);
             return; // Adicionado para interromper a execução
         }
 
@@ -306,6 +314,7 @@ public class Menu {
         List<Cliente> clientes = clienteController.listarTodosRegistros();
         if (clientes.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhuma sessão disponível. Por favor, insira uma sessão antes.");
+            MenuFormatter.delay(1);
             return;
         }
         
@@ -338,6 +347,7 @@ public class Menu {
 
         if (clienteSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de seção inválido");
+            MenuFormatter.delay(2);
             return; // Adicionado para interromper a execução
         }
 
@@ -357,6 +367,7 @@ public class Menu {
         List<Endereco> enderecos = enderecoController.listarTodosRegistros();
         if (enderecos.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhum endereço disponível. Por favor, insira um endereço antes.");
+            MenuFormatter.delay(1);
             return;
         }
 
@@ -386,6 +397,7 @@ public class Menu {
 
         if (enderecoSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de endeço inválido.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -399,6 +411,7 @@ public class Menu {
         List<Cinema> cinemas = cinemaController.listarTodosRegistros();
         if (cinemas.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhum cinema disponível. Por favor, insira um cinema antes.");
+            MenuFormatter.delay(1);
             return;
         }
 
@@ -429,6 +442,7 @@ public class Menu {
 
         if (cinemaSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de cinema inválido.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -443,6 +457,7 @@ public class Menu {
         List<Filme> filmes = filmeController.listarTodosRegistros();
         if (filmes.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhum filme disponível. Por favor, insira um filme antes.");
+            MenuFormatter.delay(1);
             return;
         }
     
@@ -472,6 +487,7 @@ public class Menu {
     
         if (filmeSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de filme inválido.");
+            MenuFormatter.delay(2);
             return;
         }
     
@@ -485,6 +501,7 @@ public class Menu {
         List<Sessao> secoes = sessaoController.listarTodosRegistros();
         if (secoes.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhuma sessão disponível. Por favor, insira uma sessão antes.");
+            MenuFormatter.delay(1);
             return;
         }
 
@@ -521,6 +538,7 @@ public class Menu {
     
         if (sessaoSelecionada == null) {
             MenuFormatter.msgTerminalERROR("ID de sessão inválido.");
+            MenuFormatter.delay(2);
             return;
         }
     
@@ -534,6 +552,7 @@ public class Menu {
         List<Venda> vendas = vendaController.listarTodosRegistros();
         if (vendas.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhuma venda disponível. Por favor, insira uma venda antes.");
+            MenuFormatter.delay(2);
             return;
         }
         
@@ -569,6 +588,7 @@ public class Menu {
     
         if (vendaSelecionada == null) {
             MenuFormatter.msgTerminalERROR("ID de venda inválido.");
+            MenuFormatter.delay(2);
             return;
         }
     
@@ -579,6 +599,7 @@ public class Menu {
     public static void menuAlterarCinema() {
         if (cinemaController.contarRegistros() == 0) {
             MenuFormatter.msgTerminalERROR("Nenhum Cinema disponível.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -603,6 +624,7 @@ public class Menu {
         Cinema cinemaSelecionado = cinemaController.buscarRegistroPorId(idEndereco);
         if (cinemaSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de Cinema inválido.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -615,6 +637,7 @@ public class Menu {
 
         if (!enderecoController.existeRegistro(cinemaSelecionado.getEndereco().getIdEndereco())) {
             MenuFormatter.msgTerminalERROR("Endereço não encontrado.");
+            MenuFormatter.delay(2);
             return;
         }
         
@@ -624,6 +647,7 @@ public class Menu {
     public static void menuAlterarEndereco() {
         if (enderecoController.contarRegistros() == 0) {
             MenuFormatter.msgTerminalERROR("Nenhum Endereço disponível.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -649,6 +673,7 @@ public class Menu {
         Endereco enderecoSelecionado = enderecoController.buscarRegistroPorId(idEndereco);
         if (enderecoSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de Endereço inválido.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -674,6 +699,7 @@ public class Menu {
     public static void menuAlterarFilme() {              
         if (filmeController.contarRegistros() == 0) {
             MenuFormatter.msgTerminalERROR("Nenhum filme disponível.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -697,6 +723,7 @@ public class Menu {
         Filme filmeSelecionado = filmeController.buscarRegistroPorId(idFilme);
         if (filmeSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de Filme inválido.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -715,6 +742,7 @@ public class Menu {
     public static void menuAlterarSessao() {
         if (sessaoController.contarRegistros() == 0) {
             MenuFormatter.msgTerminalERROR("Nenhuma Seção disponível.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -746,6 +774,7 @@ public class Menu {
         Sessao sessaoSelecionado = sessaoController.buscarRegistroPorId(idSessao);
         if (sessaoSelecionado == null) {
             MenuFormatter.msgTerminalERROR("ID de Seção inválido.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -762,6 +791,7 @@ public class Menu {
 
         if (!cinemaController.existeRegistro(sessaoSelecionado.getCinema().getIdCinema())) {
             MenuFormatter.msgTerminalERROR("Cinema não encontrado");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -770,6 +800,7 @@ public class Menu {
 
         if (!filmeController.existeRegistro(sessaoSelecionado.getFilme().getIdFilme())) {
             MenuFormatter.msgTerminalERROR("Filme não encontrado.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -779,6 +810,7 @@ public class Menu {
     public static void menuAlterarVenda() {
         if (vendaController.contarRegistros() == 0) {
             MenuFormatter.msgTerminalERROR("Nenhuma Venda disponível.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -804,6 +836,7 @@ public class Menu {
         Venda vendaSelacionada = vendaController.buscarRegistroPorId(idVenda);
         if (vendaSelacionada == null) {
             MenuFormatter.msgTerminalERROR("ID de Venda inválido.");
+            MenuFormatter.delay(2);
             return;
         }
         
@@ -811,6 +844,7 @@ public class Menu {
         
         if (vendaController.contarRegistros() == 0) {
             MenuFormatter.msgTerminalERROR("Nenhuma Venda disponível.");
+            MenuFormatter.delay(2);
             return;
         }
 
@@ -836,6 +870,7 @@ public class Menu {
         Cliente clienteSelacionada = clienteController.buscarRegistroPorId(idCliente);
         if (clienteSelacionada == null) {
             MenuFormatter.msgTerminalERROR("ID do Cliente inválido.");
+            MenuFormatter.delay(2);
             return;
         }
         vendaSelacionada.setCliente(clienteController.buscarRegistroPorId(idCliente));
@@ -852,6 +887,7 @@ public class Menu {
 
         if (!sessaoController.existeRegistro(vendaSelacionada.getSessao().getIdSessao())) {
             MenuFormatter.msgTerminalERROR("Seção não encontrada");
+            MenuFormatter.delay(2);
             return;
         }
 
