@@ -2,7 +2,7 @@
 ## 📒 Sobre o Projeto:
 A idealização do projeto foi proposta pelo professor [Howard Roatti](https://www.linkedin.com/in/howardroatti/) como uma avaliação durante a matéria, *`Banco de Dados`* no 4° período do curso Sistemas de Informação no Centro Universitário, FAESA.
 
-Para esse projeto, foi escolhido como tema pela equipe, o Sistema de Gerenciamento de Seções de Diversos Cinemas.
+Para esse projeto, foi escolhido como tema pela equipe, o Sistema de Gerenciamento de Sessões de Diversos Cinemas.
 
 Esse projeto também foi utilizado para o Trabalho da matéria *`Linguagem de Programação Orientada a Objetos`*, onde deveria ser implementados as seguintes estruturas:
 - Herança

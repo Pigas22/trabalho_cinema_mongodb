@@ -261,8 +261,8 @@ public class Menu {
     public static void menuInserirVenda() {
         MenuFormatter.titulo("INSERIR - VENDA");
 
-        List<Sessao> secoes = sessaoController.listarTodosRegistros();
-        if (secoes.isEmpty()) {
+        List<Sessao> sessoes = sessaoController.listarTodosRegistros();
+        if (sessoes.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhuma sessão disponível. Por favor, insira uma sessão antes.");
             MenuFormatter.delay(1);
             return;
@@ -277,7 +277,7 @@ public class Menu {
         LocalDateTime localDateTime;
         DateTimeFormatter formatter;
 
-        for (Sessao sessao : secoes) {
+        for (Sessao sessao : sessoes) {
             localDateTime = sessao.getHorario().toLocalDateTime();
             formatter = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -296,7 +296,7 @@ public class Menu {
         scanner.nextLine(); // Consumir a nova linha
 
         Sessao sessaoSelecionado = null;
-        for (Sessao sessao : secoes) {
+        for (Sessao sessao : sessoes) {
             if (sessao.getIdSessao() == idSessao) {
                 sessaoSelecionado = sessao;
                 break; // Adicionado para sair do loop quando a seção for encontrada
@@ -498,8 +498,8 @@ public class Menu {
 
         MenuFormatter.titulo("REMOVER - SEÇÃO");
 
-        List<Sessao> secoes = sessaoController.listarTodosRegistros();
-        if (secoes.isEmpty()) {
+        List<Sessao> sessoes = sessaoController.listarTodosRegistros();
+        if (sessoes.isEmpty()) {
             MenuFormatter.msgTerminalERROR("Nenhuma sessão disponível. Por favor, insira uma sessão antes.");
             MenuFormatter.delay(1);
             return;
@@ -513,7 +513,7 @@ public class Menu {
         LocalDateTime localDateTime;
         DateTimeFormatter formatter;
     
-        for (Sessao sessao : secoes) {
+        for (Sessao sessao : sessoes) {
             localDateTime = sessao.getHorario().toLocalDateTime();
             formatter = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -530,7 +530,7 @@ public class Menu {
         int idSessao = scanner.nextInt();
 
         Sessao sessaoSelecionada = null;
-        for (Sessao sessao : secoes) {
+        for (Sessao sessao : sessoes) {
             if (sessao.getIdSessao() == idSessao) {
                 sessaoSelecionada = sessao;
             }
@@ -896,7 +896,7 @@ public class Menu {
 
     // SplashScreen
     public static void splashScreen() {
-        String[] nomeTabelas = {"Endereços", "Cinemas", "Filmes", "Seções", "Vendas"};
+        String[] nomeTabelas = {"Endereços", "Cinemas", "Filmes", "Sessões", "Vendas"};
         String[] qtdRegistrosTabelas = {
             Integer.toString(enderecoController.contarRegistros()),
             Integer.toString(cinemaController.contarRegistros()),
