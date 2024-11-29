@@ -11,7 +11,7 @@ Esse projeto também foi utilizado para o Trabalho da matéria *`Linguagem de Pr
 - Tratamento de Exceção
 - Interface Gráfica Básica
 
-#### 📸 Link do vídeo demonstrativo no youtube: **<u>https://youtu.be/GwyLAv1S0tE?feature=shared</u>**
+#### 📸 Link do vídeo demonstrativo no youtube: **<u>https://youtu.be/l8LWcQMJ-uY?feature=shared</u>**
 
 #### 🛠️ Tecnologias e Ferramentas utilizadas no Projeto:
 <div align="center">
